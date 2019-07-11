@@ -24,7 +24,7 @@
     "tslib": "^1.10.0"
   },
   "scripts": {
-    "lint-styl": "stylint src/styles/stylus",
+    "lint-styl": "stylint src/assets/stylus",
     "start-ts": "react-app-rewired start --scripts-version react-scripts-ts",
     "start": "npm-run-all start-ts",
     "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",

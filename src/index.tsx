@@ -10,8 +10,7 @@ import services from './services'
 import echarts from 'echarts'
 
 import 'antd/dist/antd.less'
-import './styles/stylus/index.styl'
-import './styles/less/my-theme.less'
+import './assets/stylus/index.styl'
 
 ReactDOM.render(
   <Provider {...stores} {...services} echarts={echarts}>

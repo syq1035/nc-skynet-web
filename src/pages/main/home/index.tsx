@@ -4,7 +4,7 @@ import { UserStore } from 'src/stores/modules/user'
 import { RouteComponentProps } from 'react-router';
 import { Button } from 'antd';
 
-import themeData from './halloween.json'
+import themeData from 'src/assets/json/halloween.json'
 
 interface HomePorps extends RouteComponentProps {
   userStore: UserStore

@@ -21,7 +21,6 @@ proxy.conf.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-src/styles/css/*
 .history
 
 proxy.conf.js

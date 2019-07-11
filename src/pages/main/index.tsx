@@ -6,6 +6,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { observable } from 'mobx'
 
 import Home from './home'
+import Search from './search'
 import HeaderNav from 'src/components/header'
 
 import { UserService } from 'src/services/user'
@@ -78,6 +79,10 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
                     <Route
                       path="/main/home"
                       component={Home}
+                    />
+                    <Route
+                      path="/main/search"
+                      component={Search}
                     />
                     <Redirect to="/main/home" />
                   </Switch>
