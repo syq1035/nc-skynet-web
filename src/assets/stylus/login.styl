@@ -1,38 +1,50 @@
 .login-main
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  bg('bg.jpg');
+  position relative;
+  bg('bj.png');
+  background-color: #0C0329
+
+  .login-header
+    width 100%
+    height .8rem
+    padding-bottom .1rem
+    bg('login-header.png')
+
+    .title
+      height 100%
+      width: 18%;
+      margin-left: 2%;
+      bg-contain('title.png')
+
+  .animate
+    position: absolute
+    width: 3.5rem;
+    height: 5.6rem;
+    top 25%
+    left 25%
+    bg('animate.png')
+    filter saturate(2)
 
   .login-form
-    width: 780px;
-    height: 600px;
-    padding: 110px 80px;
-    icon('login_form_bg.png');
-  
-    .login-logo
-      width: 100%;
-      height 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    
-      & > i
-        display: block;
-        width: 60px;
-        height 64px;
-        icon('login_logo.png');
-
-      & > span
-        font-size: 37px;
-        color: #fff;
-        margin-left: -60px;
+    width: 3.84rem;
+    height: 4.57rem;
+    min-width: 300px;
+    min-height: 370px;
+    position: absolute;
+    padding: 1rem .3rem .3rem;
+    left 60%
+    top 25%
+    bg('login-bg.png')
+    // padding: 110px 80px;
       
+    .login-title
+      font-size: .24rem;
+      margin: .2rem 0;
+      color #D2EFFF
+
     .form-con
       width: 100%;
-      margin-top: 72px;
 
       .has-error
 
@@ -52,14 +64,17 @@
             box-shadow: none;
 
       .ant-input-prefix
-        color: #fff;
+        color: rgba(255,255,255,0.6);
       
       .ant-input
         background-color: rgba(41, 157, 242, .14);
         color: rgba(255, 255, 255, .6);
         border-radius: 1px;
         border: 0;
-        height 48px;
+        height .4rem;
+        border-bottom: 1px solid #134d95;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
 
         &:focus
           box-shadow: none;
@@ -71,24 +86,24 @@
         .ant-checkbox-wrapper
           .ant-checkbox
             .ant-checkbox-inner
-              background-color: transparent;
-              border: 1px solid #809EB3;
+              // background-color: transparent;
+              // border: 1px solid #809EB3;
           
           & > span
             &:last-child
-              color: #fff;
+              color: rgba(255,255,255,0.6);
       
       .sub-box
         width: 100%;
-        height 70px;
+        height .4rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
         .ant-btn
-          width: 298px;
-          height 66px;
-          background-color: transparent;
+          width:100%;
+          height .4rem;
+          // background-color: transparent;
           border: 0;
 
           &[ant-click-animating-without-extra-node='true']
@@ -97,11 +112,6 @@
               opacity: 0;
 
           & > span 
-            font-size: 24px;
+            font-size: .2rem;
 
-          &:nth-child(1)
-            icon('login_left_btn.png');
-
-          &:nth-child(2)
-            icon('login_right_btn.png');
           

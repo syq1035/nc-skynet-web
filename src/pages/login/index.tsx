@@ -57,11 +57,12 @@ class Login extends React.Component<LoginProps, {}> {
     const { getFieldDecorator } = this.props.form
     return (
       <div className="login-main">
+        <div className="login-header">
+          <div className="title"></div>
+        </div>
+        <div className="animate"></div>
         <div className="login-form">
-          <div className="login-logo">
-            <i></i>
-            <span>南昌市公安局数字天网</span>
-          </div>
+          <div className="login-title">账号登录</div>
           <Form className="form-con" onSubmit={this.login}>
             <Form.Item>
               {
@@ -101,15 +102,12 @@ class Login extends React.Component<LoginProps, {}> {
                     valuePropName: 'checked',
                     initialValue: true
                   })(
-                  <Checkbox>记住密码</Checkbox>)
+                  <Checkbox checked={true}>记住密码</Checkbox>)
                 }
               </div>
               <div className="sub-box">
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   登录
-                </Button>
-                <Button type="primary" className="login-form-button">
-                  PKI登录
                 </Button>
               </div>
             </Form.Item>

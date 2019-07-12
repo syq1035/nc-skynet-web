@@ -33,57 +33,88 @@
 
 .main
   width: 100%;
-  height: 100%;
-  bg('main_bg.jpg');
+  // height: 100%;
+  padding-top: 5px;
+  background-color: #041C3F;
+  background-image: url('../../assets/image/lineborder.png'),url('../../assets/image/lineborder.png')
+  background-position: .5% 5px,99.5% 5px;
+  background-repeat: no-repeat;
+  background-size: contain;
 
+  .header
+    width 97%
+    height .75rem
+    margin 0 auto
+    padding-bottom: 1vh;
+    display: flex
+    // justify-content center
+    align-items: center
+    bg('main-header.png')
+
+    .title
+      height 100%
+      flex: 0 0 26%;
+      margin-left: 2%;
+      bg-contain('title.png')
+      background-position: left center
+
+    .menu
+      flex 1
+      display: flex
+      text-align: center
+      color #D2EFFF
+
+      & > li
+        width: 1.45rem;
+        height: 0.45rem;
+        line-height: .45rem;
+        font-size: 0.2rem;
+        margin: 0 .1rem;
+        bg('button-normal.png')
+        cursor pointer
+
+        &.active
+          bg('button-focus.png')
+
+    .user
+      flex: 0 0 10%
+      display: flex
+      align-items: center;
+      justify-content: center;
+      color: #D2EFFF;
+
+      .avatar
+        width .32rem
+        height .32rem
+        background-color: #1890ff
+        border-radius: 50%
+        text-align: center;
+
+        & > i 
+          line-height: .36rem
+          font-size: .18rem
+
+      .user-name
+        margin 0 .15rem
+        font-size .14rem
+      
+      .logout
+          line-height: .36rem
+          height .32rem
+          font-size: .18rem
+          cursor pointer
+
+          &:hover
+            color:#1890ff
+          
+
+        
   .main-body
     position: relative;
     width: 100%;
-    height: calc(100% - 63px);
+    padding: 0 .10rem;
+    // height: calc(100% - 7.5vh);
+    color: #D2EFFF;
+    overflow: auto;
 
-    .menu-slide
-      position: fixed;
-      top: 10%;
-      left: 0;
-      height: 100%;
-      width: 20px;
-      z-index: 102;
 
-    .left-menu
-      position: absolute;
-      width 200px;
-      height: calc(100% + 10px);
-      top: -10px;
-      z-index: 1001;
-      overflow-x: hidden;
-      transition: 500ms;
-      background-color: #132C68;
-      box-shadow: 0 1px 19px 0 rgba(9, 165, 248, .45) inset;
-
-      &.unexpand
-        transform: translateX(-200px);
-
-      .ant-menu
-        width: 100%;
-        height 100%;
-        background-color: transparent;
-        
-        .menu-name
-          margin-left: -10px;
-
-        &.ant-menu-sub
-          background-color: #061643;
-          background: #061643;
-
-          .menu-name
-            margin-left: -20px;
-
-    .right-body
-      position: relative;
-      width: 100%;
-      height 100%;
-      z-index 100;
-
-      .main-route
-        width: 100%;
-        height 100%;

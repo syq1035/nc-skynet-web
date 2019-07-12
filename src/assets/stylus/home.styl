@@ -1,6 +1,21 @@
 .home-main
   height 100%
   width 100%
+  display flex
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .board-wrapper
+    min-height: 324px;
+    height 44.5vh;
+    width: 48%;
+    margin: 5px;
+    bg('echarts-border1.png')
+
+    &.bottom
+      width: 97%
+      bg('echarts-border2.png')
 
   .charts
     width: 500px

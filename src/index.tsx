@@ -9,7 +9,7 @@ import stores from './stores'
 import services from './services'
 import echarts from 'echarts'
 
-import 'antd/dist/antd.less'
+import 'antd/dist/antd.css'
 import './assets/stylus/index.styl'
 
 ReactDOM.render(

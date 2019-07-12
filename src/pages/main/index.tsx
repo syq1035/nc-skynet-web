@@ -1,13 +1,12 @@
 import { observer, inject } from 'mobx-react'
 import * as React from 'react'
-import { Menu, message } from 'antd'
+import { message, Icon } from 'antd'
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { observable } from 'mobx'
 
 import Home from './home'
 import Search from './search'
-import HeaderNav from 'src/components/header'
 
 import { UserService } from 'src/services/user'
 import { UserStore } from 'src/stores/modules/user'
@@ -46,49 +45,51 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     }
   }
 
+  public routeTo (url: string) {
+    debugger
+    this.props.history.push(url)
+  }
+
   public render () {
     const location = this.props.location
     const { pathname } = location
     return (
       <div className="main">
-        <HeaderNav sigout={this.sigout}/>
+        <div className="header">
+          <div className="title"></div>
+          <div className="menu">
+            <li className="active" onClick={this.routeTo.bind('/main/home')}>首页</li>
+            <li onClick={() => {this.routeTo('/main/search')}}>数据搜索</li>
+          </div>
+          <div className="user">
+            <div className="avatar">
+              <Icon type="user" />
+            </div>
+            <div className="user-name">admin</div>
+            <div className="logout">
+              <Icon type="logout" />
+            </div>
+          </div>
+        </div>
         <div className="main-body">
-          <div className="menu-slide"></div>
-          <div>
-            <Menu
-              selectedKeys={this.selectItem}
-              openKeys={this.selectExpand}
-              mode="inline"
-              theme="dark">
-              <Menu.Item
-                onClick={this.chooseMenu.bind(this, '首页')}
-                key={'首页'}
-                title={'首页'}
-                >
-                <span className="menu-name">首页</span>
-              </Menu.Item>
-            </Menu>
-          </div>
-          <div className="right-body">
-            <TransitionGroup className="main-route">
-              <CSSTransition
-                key={pathname.split('/')[2]}
-                timeout={{ enter: 1000, exit: 0 }}
-                classNames={'fade'}>
-                  <Switch location={location}>
-                    <Route
-                      path="/main/home"
-                      component={Home}
-                    />
-                    <Route
-                      path="/main/search"
-                      component={Search}
-                    />
-                    <Redirect to="/main/home" />
-                  </Switch>
-              </CSSTransition>
-            </TransitionGroup>
-          </div>
+          <TransitionGroup className="main-route">
+            <CSSTransition
+              key={pathname.split('/')[2]}
+              timeout={{ enter: 1000, exit: 0 }}
+              classNames={'fade'}>
+                <Switch location={location}>
+                  <Route
+                    path="/main/home"
+                    component={Home}
+                  />
+                  <Route
+                    path="/main/search"
+                    component={Search}
+                  />
+                  <Redirect to="/main/home" />
+                </Switch>
+            </CSSTransition>
+          </TransitionGroup>
         </div>
       </div>
     )
