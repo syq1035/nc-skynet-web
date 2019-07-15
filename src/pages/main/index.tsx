@@ -2,6 +2,7 @@ import { observer, inject } from 'mobx-react'
 import * as React from 'react'
 import { message, Icon } from 'antd'
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router'
+import { NavLink } from 'react-router-dom'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { observable } from 'mobx'
 
@@ -45,11 +46,6 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     }
   }
 
-  public routeTo (url: string) {
-    debugger
-    this.props.history.push(url)
-  }
-
   public render () {
     const location = this.props.location
     const { pathname } = location
@@ -58,8 +54,8 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
         <div className="header">
           <div className="title"></div>
           <div className="menu">
-            <li className="active" onClick={this.routeTo.bind('/main/home')}>首页</li>
-            <li onClick={() => {this.routeTo('/main/search')}}>数据搜索</li>
+            <NavLink exact activeClassName="active" to="/main/home">首页</NavLink>
+            <NavLink exact to="/main/search">数据搜索</NavLink>
           </div>
           <div className="user">
             <div className="avatar">

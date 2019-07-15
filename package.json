@@ -30,7 +30,8 @@
     "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",
     "build": "npm-run-all lint build-ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "test:debug": "react-app-rewired --inspect-brk test --runInBand"
   },
   "devDependencies": {
     "@material-ui/core": "^4.1.2",

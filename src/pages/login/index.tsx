@@ -5,7 +5,8 @@ import {
   Icon,
   Input,
   Button,
-  Checkbox
+  Checkbox,
+  message
 } from 'antd'
 import { RouteComponentProps } from 'react-router'
 import { UserService } from 'src/services/user'
@@ -32,25 +33,24 @@ class Login extends React.Component<LoginProps, {}> {
 
   public login = async (e: any): Promise<any> => {
     e.preventDefault()
-    this.props.history.replace('/main/home')
+    // this.props.history.replace('/main/home')
 
-    // this.props.form.validateFields(async (err: any, values: any) => {
-    //   if (!err) {
-    //     const putData: any = {
-    //       ...values,
-    //       remember: undefined
-    //     }
-    //     const res = await this.userService.sign(putData)
-    //     if (res.status === 0) {
-    //       message.success('登录成功')
-    //       this.userStore.saveLoginData(res.data)
-    //       this.menuStore.reCache()
-    //       this.props.history.replace('/main/home')
-    //     } else {
-    //       message.error(res.msg || '登录失败')
-    //     }
-    //   }
-    // })
+    this.props.form.validateFields(async (err: any, values: any) => {
+      if (!err) {
+        const putData: any = {
+          ...values,
+          remember: undefined
+        }
+        const res = await this.userService.sign(putData)
+        if (res.status === 0) {
+          message.success('登录成功')
+          this.userStore.saveLoginData(res.data)
+          this.props.history.replace('/main/home')
+        } else {
+          message.error(res.msg || '登录失败')
+        }
+      }
+    })
   }
 
   public render () {

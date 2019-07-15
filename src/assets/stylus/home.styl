@@ -8,15 +8,186 @@
 
   .board-wrapper
     min-height: 324px;
-    height 44.5vh;
+    height 4.8rem;
     width: 48%;
-    margin: 5px;
+    margin: .05rem;
     bg('echarts-border1.png')
+
+    .border-title
+      text-align: center;
+      font-size: .15rem;
+      line-height: .2rem;
+      height: .2rem;
+    
+    .chart-wrapper
+      display: flex
+      height calc(100% - .2rem)
+      padding .2rem
+
+      &.top-right
+        // padding 0
+
+      .pie
+        display: flex
+        flex-direction: column
+        // margin .2rem
+
+        .time
+          flex 1
+          height .2rem
+          display flex
+          justify-content: center
+          align-items: center
+          
+          & > span.text
+            flex 1
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0.4rem;
+            bg-contain('pie-title.png')
+
+        .pie-charts
+          flex 2
+          display: flex
+          justify-content: center
+          align-items: center
+
+          & > div
+            flex 1
+            height 100%
+
+
+        .pie-point
+          flex 1
+          display flex
+          justify-content center;
+
+          & >span 
+            display: flex;
+            align-items: center;
+            margin-right: .2rem;
+
+            & > i 
+              display: inline-block;
+              width: 0.15rem;
+              height: 0.15rem;
+              border-radius: 50%;
+              margin-right: .1rem;
+
+              &.qs
+                background-color: #153797
+              
+              &.by
+                background-color: #2D99FF
+
+        &.left-pie
+          flex 2
+          border-right 1px solid #153797
+          
+        &.right-pie
+          flex 1
+
+          .time
+            flex-direction: column;
+
+    &.card-container
+      padding-top: .2rem
+      display flex
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .card
+        flex 0 0 32%
+        height: 46%;
+        margin: .05rem;
+        padding: 0.25rem .25rem .15rem;
+        display: flex
+        flex-direction: column
+        justify-content: center;
+        // align-items: center;
+        bg-contain('card-up.png')
+        
+        .card-title
+          flex 1
+          font-size: .2rem
+        
+        .card-total
+          flex 2
+          font-size: .5rem
+          color #FFD83F
+          text-shadow: 1px 2px 5px #FFD83F
+
+        .card-rate
+          flex 1
+          display: flex
+
+          .text
+            flex 1
+            text-align: right
+
+          .rate
+            flex 2
+            font-size: .14rem
+            text-align: center
+
+            .num
+              font-size: .15rem
+              margin 0 .1rem
+
+        &.up
+          bg-contain('card-up.png')
+
+          .rate
+            color #FF5675
+
+            .arrow
+              display inline-block
+              width .1rem
+              height .1rem
+              icon('arrow-up.svg')
+
+        &.down
+          bg-contain('card-down.png')
+          
+          .rate
+            color #01FFB6
+
+            .arrow
+              display inline-block
+              width .1rem
+              height .1rem
+              icon('arrow-down.svg')
+
 
     &.bottom
       width: 97%
       bg('echarts-border2.png')
 
-  .charts
-    width: 500px
-    height 400px
+
+.chart-main
+  height 100%
+  width 100%
+
+  .filter
+    height .5rem
+    line-height: .5rem
+    display: flex
+    align-items: center;
+
+    .time-filter
+      flex 1
+    
+    .place-filter
+      flex 2
+
+      .ant-breadcrumb-link
+        cursor pointer
+
+        &:hover
+          color #2D99FF
+  
+  .chart-content
+    height calc(100% - .5rem)
+    width 100%

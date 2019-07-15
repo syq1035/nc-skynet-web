@@ -1,34 +1,75 @@
 import moment from 'moment'
 
 export default class Util {
+  public hasOwnProperty: any
+  public propIsEnumerable: any
 
-  public static getHrefMap (search: string) {
-    if (search) {
-      const searchCon: string = search.split('?')[1]
-      const searchItem: string[] = searchCon.split('&')
-      const res: any = {}
+  constructor () {
+    this.hasOwnProperty = Object.prototype.hasOwnProperty
+    this.propIsEnumerable = Object.prototype.propertyIsEnumerable
+  }
 
-      searchItem.forEach((item: string) => {
-        const key: string = item.split('=')[0]
-        const val: string = item.split('=')[1]
-        res[key] = val
-      })
-      return res
+  public isObj (x: any) { 
+    const type = typeof x
+    return x !== null && (type === 'object' || type === 'function')
+  }
+  
+  public toObject (val: any) {
+    if (val === null || val === undefined) {
+      throw new TypeError('Cannot convert undefined or null to object')
     }
-    return null
+    return Object(val)
   }
+  
+  public assignKey (to: any, from: any, key: any) {
+    const val = from[key]
+  
+    if (val === undefined || val === null) {
+      return
+    }
+    if (this.hasOwnProperty.call(to, key)) {
+      if (to[key] === undefined || to[key] === null) {
+        throw new TypeError('Cannot convert undefined or null to object (' + key + ')')
+      }
+    }
+    if (!this.hasOwnProperty.call(to, key) || !this.isObj(val)) {
+      to[key] = val
+    } else {
+      to[key] = this.assign(Object(to[key]), from[key])
+    }
+  }
+  
+  public assign (to: any, from: any) {
+    if (to === from) {
+      return to
+    }
+    from = Object(from)
+    for (const key in from) {
+      if (this.hasOwnProperty.call(from, key)) {
+        this.assignKey(to, from, key)
+      }
+    }
+    if (Object.getOwnPropertySymbols) {
+      const symbols = Object.getOwnPropertySymbols(from)
 
-  public static setMenu (list: any[], parentId: string[] = []) {
-    list.forEach((item: any) => {
-      item.parent_id = []
-      if (parentId && parentId.length > 0) {
-        item.parent_id = [...parentId]
-      }
-      if (item.children && item.children.length > 0) {
-        this.setMenu(item.children, [...item.parent_id, item.id])
-      }
-    })
+      symbols.forEach(item => {
+        if (this.propIsEnumerable.call(from, item)) {
+          this.assignKey(to, from, item)
+        }
+      })
+    }
+    return to
   }
+  
+  public deepAssign (target: any, from: any) {
+    target = this.toObject(target)
+    for (const index in from) {
+      if (from.hasOwnProperty(index)) {
+        this.assign(target, from[index])
+      }
+    }
+    return target
+  };
 
   public static momentDate (num: any, type: string = 'date_time'): string {
     if (num) {
@@ -55,23 +96,6 @@ export default class Util {
       }
     } else {
       return ''
-    }
-  }
-
-  public static findMenuByName (name: string, menuList: any): any {
-    const menuListArray: [] = menuList.slice()
-    const len: number = menuListArray.length
-    for (let i = 0; i < len; i ++) {
-      const menuItem: any = menuListArray[i]
-      if (menuItem.name === name) {
-        return {...menuItem}
-      }
-      if (menuItem.children) {
-       const targetMenuObj = this.findMenuByName (name, menuItem.children)
-       if (targetMenuObj) {
-        return targetMenuObj
-       }
-      }
     }
   }
 

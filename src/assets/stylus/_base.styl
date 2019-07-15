@@ -9,24 +9,39 @@ input:-webkit-autofill:active
   transition-delay: 9999999999999s;
   transition: color 9999999999999s ease-out, background-color 9999999999999s ease-out;
 
-::-webkit-scrollbar-button
-  display: none;
-  width: 0;
-  height: 0;
+// ::-webkit-scrollbar-button
+//   display: none;
+//   width: 0;
+//   height: 0;
 
-::-webkit-scrollbar-corner
+// ::-webkit-scrollbar-corner
+//   background-color: transparent;
+
+// ::-webkit-scrollbar
+//   width: 8px;
+//   height: 8px;
+
+// ::-webkit-scrollbar-track
+//   border-radius: 4px;
+
+// ::-webkit-scrollbar-thumb
+//   border-radius: 4px;
+//   background-color: rgba(150, 150, 150, .3);
+ /* 滚动槽 */
+ ::-webkit-scrollbar-track {
+    border-radius:8px;
+    background-color: #041c3f;
+  }
+ /* 设置滚动条的样式 */
+ ::-webkit-scrollbar {
+  width:8px;
   background-color: transparent;
-
-::-webkit-scrollbar
-  width: 8px;
-  height: 8px;
-
-::-webkit-scrollbar-track
-  border-radius: 4px;
-
-::-webkit-scrollbar-thumb
-  border-radius: 4px;
-  background-color: rgba(150, 150, 150, .3);
+  }
+   /* 滚动条滑块 */
+   ::-webkit-scrollbar-thumb {
+    border-radius:10px;
+    background:rgba(47, 99, 172, 0.7);
+    }
 
 ellipsis_num(line)
   display: -webkit-box;
