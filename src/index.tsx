@@ -8,7 +8,9 @@ import AppRouter from './routers'
 import stores from './stores'
 import services from './services'
 import echarts from 'echarts'
-
+import moment from 'moment'
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 import 'antd/dist/antd.css'
 import './assets/stylus/index.styl'
 

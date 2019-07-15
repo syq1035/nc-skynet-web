@@ -32,23 +32,23 @@
         flex-direction: column
         // margin .2rem
 
-        .time
-          flex 1
-          height .2rem
-          display flex
-          justify-content: center
-          align-items: center
+        // .time
+        //   flex 1
+        //   height .2rem
+        //   display flex
+        //   justify-content: center
+        //   align-items: center
           
-          & > span.text
-            flex 1
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0.4rem;
-            bg-contain('pie-title.png')
+        //   & > span.text
+        //     flex 1
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     margin: 0.4rem;
+        //     bg-contain('pie-title.png')
 
         .pie-charts
-          flex 2
+          flex 3
           display: flex
           justify-content: center
           align-items: center
@@ -90,6 +90,9 @@
 
           .time
             flex-direction: column;
+
+            .time-range
+              width: 240px !important;
 
     &.card-container
       padding-top: .2rem
@@ -169,15 +172,22 @@
 .chart-main
   height 100%
   width 100%
+  display: flex
+  flex-direction: column
 
   .filter
-    height .5rem
+    // height .5rem
+    flex 0 0 .5rem
     line-height: .5rem
     display: flex
     align-items: center;
 
     .time-filter
-      flex 1
+      flex 3
+
+      .time-range
+        width: 240px !important;
+
     
     .place-filter
       flex 2
@@ -187,7 +197,26 @@
 
         &:hover
           color #2D99FF
-  
+
+  .time
+    flex 1
+    height .2rem
+    display flex
+    justify-content: center
+    align-items: center
+    
+    & > span.text
+      flex 1
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0.4rem;
+      bg-contain('pie-title.png')
+    
+    .time-range
+        width: 240px !important;
+
   .chart-content
-    height calc(100% - .5rem)
+    // height calc(100% - .5rem)
+    flex 2
     width 100%
