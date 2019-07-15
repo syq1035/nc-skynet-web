@@ -57,7 +57,7 @@ class AxiosUtil {
             case 401:
             case 403:
               message.error('登录已经失效，请重新登录')
-              // user.sigout()
+              user.sigout()
               break
             default:
               break

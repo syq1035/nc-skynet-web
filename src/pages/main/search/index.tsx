@@ -1,4 +1,4 @@
-import { DatePicker, Input, Button, Row, Col, Table } from 'antd';
+import { DatePicker, Input, Button, Row, Col, Table, message } from 'antd';
 import { observable } from 'mobx'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
@@ -17,11 +17,11 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   @observable public page: number = 1
   @observable public total: number
   @observable public pagination: any
-  @observable public startImpTime: any = '2019-07-13'
-  @observable public endImpTime: any = '2019-07-14'
-  @observable public startCollectTime: any = '2019-07-13'
-  @observable public endCollectTime: any = '2019-07-14'
-  @observable public bts: any = '72086WIFI'
+  @observable public startImpTime: any = ''
+  @observable public endImpTime: any = ''
+  @observable public startCollectTime: any = ''
+  @observable public endCollectTime: any = ''
+  @observable public bts: string = ''
 
   public columns: any = [
     {
@@ -30,7 +30,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     },
     {
       title: '事件ID',
-      dataIndex: 'sn',
+      dataIndex: 'adivision',
     },
     {
       title: '设备ID',
@@ -42,7 +42,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     },
     {
       title: '前台序列号',
-      dataIndex: 'adivision',
+      dataIndex: 'sn',
     },
     {
       title: 'MAC',
@@ -62,30 +62,6 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     }
   ];
 
-  public data: any = [
-    {
-      id: 1111111,
-      eventID: 111111,
-      deviceID: 111111,
-      deviceName: 'aaa',
-      serialNum: 333333,
-      mac: 555555,
-      zb: '1,3',
-      pickTime: '2019.2.3',
-      storageTime: '2019.4.3'
-    },
-    {
-      id: 1111111,
-      eventID: 111111,
-      deviceID: 111111,
-      deviceName: 'aaa',
-      serialNum: 333333,
-      mac: 555555,
-      zb: '1,3',
-      pickTime: '2019.2.3',
-      storageTime: '2019.4.3'
-    }
-  ]
   public state: any = {
     selectedRowKeys: []
   }
@@ -102,18 +78,24 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
       bts: this.bts
     })
     if (res.status === 0) {
-      this.tableData = res.data.data
+      this.tableData = res.data.list
       this.total = res.data.total
     }
   }
   public export = async () => {
-    await this.searchService.exportExcel({
+    const res: any = await this.searchService.exportExcel({
       'wifiSearchVo': {
         'startImpTime': '2019-07-09',
         'endImpTime': '2019-07-11',
         'bts': '11133WIFI'
       },
+      'ids': ['11133', '1562840086575', '1562838754864', '1562838622519', '1562838623927']
     })
+    if (res.status === 0) {
+      message.success('导出成功')
+    } else {
+      message.error(res.msg || '导出失败')
+    }
   }
 
   public search = () => {
@@ -134,18 +116,28 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     this.searchData()
   }
 
+  public changeCellectTime = (date: any, dateString: any) => {
+    this.startCollectTime = dateString[0]
+    this.endCollectTime = dateString[1]
+  }
+
+  public changeImpTime = (date: any, dateString: any) => {
+    this.startImpTime = dateString[0]
+    this.endImpTime = dateString[1]
+  }
+
   constructor (props: any) {
     super(props)
     this.searchService = props.searchService
 
     this.pagination = {
-      pageSize: 10,
+      pageSize: 12,
       size: 'middle',
       onChange: this.changePage,
-      hideOnSinglePage: true
+      hideOnSinglePage: true,
+      showQuickJumper: true
     }
     this.searchData()
-    console.log(this.searchData())
   }
 
   public render () {
@@ -164,12 +156,17 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                 size="small" 
                 className="range" 
                 placeholder={['开始时间', '结束时间']}
-                
+                onChange={this.changeCellectTime}
                 />
             </Col>
             <Col span={5}>
               <span>入库时间</span>
-              <RangePicker size="small" className="range" placeholder={['开始时间', '结束时间']} />
+              <RangePicker 
+                size="small" 
+                className="range" 
+                placeholder={['开始时间', '结束时间']} 
+                onChange={this.changeImpTime}
+                />
             </Col>
             <Col span={3}>
               <span>设备</span>
@@ -191,6 +188,11 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
         </div>
         <div className="search-wrapper">
             <Table size="small"
+              pagination={{
+                ...this.pagination,
+                current: this.page,
+                total: this.total
+              }}
               rowSelection={rowSelection} 
               columns={this.columns} 
               dataSource={this.tableData} 
