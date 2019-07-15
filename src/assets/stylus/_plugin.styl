@@ -8,7 +8,7 @@ input
   border: 0;
   border-radius: 0;
 
-  &.ant-table-bordered
+  &.ant-table
     & > .ant-table-content
       border-right: 0;
     &.ant-table-fixed-header 
@@ -30,13 +30,13 @@ input
       .ant-empty-description
         color: rgba(255, 255, 255, .8);
 
-    & > .ant-table-scroll
-      & > .ant-table-header
+    & > .ant-table-header
         background-color: rgb(30, 66, 117);
         overflow: hidden !important;
         width: calc(100% - 8px);
         height 35px;
         margin-bottom: 0 !important;
+        border: 0
         & > table
           & > .ant-table-thead
             & > tr
@@ -50,18 +50,22 @@ input
                 border-right: 1px solid rgb(7, 21, 66);
                 border-bottom: 1px solid rgb(7, 21, 66);
 
-      & > .ant-table-body
-        background: transparent;
-        & > table
-          & > .ant-table-tbody
-            & > tr
-              &:nth-child(2n+1) 
-                background-color: rgb(13, 46, 94);
-              &:nth-child(2n+2)
-                background-color: rgb(17, 51, 100);
-              & > td
-                border-right: 1px solid rgb(7, 21, 66);
-                border-bottom: 1px solid rgb(7, 21, 66);
+    & > .ant-table-body
+      background: #06305f;
+      & > table
+        & > .ant-table-thead
+          & > tr
+            & > th
+              color: rgba(255, 255, 255, .8);
+
+        & > .ant-table-tbody
+          & > tr
+            &:nth-child(2n+1) 
+              background-color: #052651;
+            &:nth-child(2n+2)
+              background-color: #06305f;
+            & > td
+              border: 0;
 
 .ant-modal-mask
   background-color: #071541;
@@ -131,6 +135,10 @@ input
   &:active
     border-color: rgb(36, 62, 100);
     box-shadow: none;
+
+.ant-input
+  border-radius: 3px;
+  background-color: #052b52;
 
 .ant-select
   .ant-select-selection
