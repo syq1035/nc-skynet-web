@@ -24,28 +24,79 @@
       height calc(100% - .2rem)
       padding .1rem .2rem
 
+      &.card-container
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .card
+          flex 0 0 32%
+          height: 46%;
+          margin: .05rem;
+          padding: 0.25rem .25rem .15rem;
+          display: flex
+          flex-direction: column
+          justify-content: center;
+          // align-items: center;
+          bg-contain('card-up.png')
+          
+          .card-title
+            flex 1
+            font-size: .2rem
+          
+          .card-total
+            flex 2
+            font-size: .5rem
+            color #FFD83F
+            text-shadow: 1px 2px 5px #FFD83F
+
+          .card-rate
+            flex 1
+            display: flex
+
+            .text
+              flex 1
+              text-align: right
+
+            .rate
+              flex 2
+              font-size: .14rem
+              text-align: center
+
+              .num
+                font-size: .15rem
+                margin 0 .1rem
+
+          &.up
+            bg-contain('card-up.png')
+
+            .rate
+              color #FF5675
+
+              .arrow
+                display inline-block
+                width .1rem
+                height .1rem
+                icon('arrow-up.svg')
+
+          &.down
+            bg-contain('card-down.png')
+            
+            .rate
+              color #01FFB6
+
+              .arrow
+                display inline-block
+                width .1rem
+                height .1rem
+                icon('arrow-down.svg')
+
       &.top-right
         // padding 0
 
       .pie
         display: flex
         flex-direction: column
-        // margin .2rem
-
-        // .time
-        //   flex 1
-        //   height .2rem
-        //   display flex
-        //   justify-content: center
-        //   align-items: center
-          
-        //   & > span.text
-        //     flex 1
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     margin: 0.4rem;
-        //     bg-contain('pie-title.png')
 
         .pie-charts
           flex 3
@@ -94,74 +145,6 @@
             .time-range
               width: 240px !important;
 
-    &.card-container
-      padding-top: .2rem
-      display flex
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-
-      .card
-        flex 0 0 32%
-        height: 46%;
-        margin: .05rem;
-        padding: 0.25rem .25rem .15rem;
-        display: flex
-        flex-direction: column
-        justify-content: center;
-        // align-items: center;
-        bg-contain('card-up.png')
-        
-        .card-title
-          flex 1
-          font-size: .2rem
-        
-        .card-total
-          flex 2
-          font-size: .5rem
-          color #FFD83F
-          text-shadow: 1px 2px 5px #FFD83F
-
-        .card-rate
-          flex 1
-          display: flex
-
-          .text
-            flex 1
-            text-align: right
-
-          .rate
-            flex 2
-            font-size: .14rem
-            text-align: center
-
-            .num
-              font-size: .15rem
-              margin 0 .1rem
-
-        &.up
-          bg-contain('card-up.png')
-
-          .rate
-            color #FF5675
-
-            .arrow
-              display inline-block
-              width .1rem
-              height .1rem
-              icon('arrow-up.svg')
-
-        &.down
-          bg-contain('card-down.png')
-          
-          .rate
-            color #01FFB6
-
-            .arrow
-              display inline-block
-              width .1rem
-              height .1rem
-              icon('arrow-down.svg')
 
 
     &.bottom

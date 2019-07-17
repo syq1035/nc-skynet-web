@@ -61,10 +61,11 @@ export default class Home extends React.Component<HomePorps, {}> {
     const cardsData = this.cardsData
     return (
       <div className="home-main">
-        <div className="board-wrapper card-container">
+        <div className="board-wrapper">
+          <div className="border-title">采集量指标卡</div>
           {
             cardsData ? 
-            <>
+            <div className="chart-wrapper card-container">
               <Card title={'本月采集量'} 
               value={cardsData.current_month.value} 
               lastValue={cardsData.current_month.last_value}></Card>
@@ -83,7 +84,7 @@ export default class Home extends React.Component<HomePorps, {}> {
               <Card title={'今日秋水广场采集量'}
               value={cardsData.today_qs.value} 
               lastValue={cardsData.today_qs.last_value}></Card>
-            </>
+            </div>
             : ''
           }
         </div>
