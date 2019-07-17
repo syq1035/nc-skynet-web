@@ -1,4 +1,4 @@
-import { DatePicker, Input, Button, Row, Col, Table, Icon, message } from 'antd';
+import { DatePicker, Input, Row, Col, Table, Icon, message } from 'antd';
 import { observable } from 'mobx'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
@@ -82,7 +82,7 @@ export default class Warning extends React.Component<{}, {}> {
       title: '操作',
       key: 'action',
       render: (text: any, record: any) => (
-        <span>
+        <span className="action">
           <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
           <a href="javascript:;" onClick={this.showEdit.bind(this, record.id)} >
             <Icon type="edit"/>编辑
@@ -194,7 +194,7 @@ export default class Warning extends React.Component<{}, {}> {
     super(props)
     this.warningService = props.warningService
     this.pagination = {
-      pageSize: 12,
+      pageSize: 11,
       size: 'middle',
       onChange: this.changePage,
       hideOnSinglePage: true,
@@ -220,10 +220,14 @@ export default class Warning extends React.Component<{}, {}> {
         <div className="operate-bar">
           <Row>
           <Col span={2}>
-            <Button size="small" className="export-btn btn" >布控</Button>
+            <div className="btn">
+              <i>布控</i>
+            </div>
           </Col>
           <Col offset={1} span={2}>
-            <Button size="small" className="export-btn btn" >预警</Button>
+            <div className="btn">
+              <i>预警</i>
+            </div>
           </Col>  
           </Row>
         </div>
@@ -259,22 +263,40 @@ export default class Warning extends React.Component<{}, {}> {
                 />
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="search" onClick={this.search} >搜索</Button>
+              <div className="btn" onClick={this.search}>
+                <Icon type="search"></Icon>
+                <i>搜索</i>
+              </div>
             </Col>
             <Col offset={1} span={2}>
-              <Button className="export-btn btn" size="small" icon="plus" onClick={this.showAddModal}>添加布控</Button>
+              <div className="btn" onClick={this.showAddModal}>
+                <Icon type="plus"></Icon>
+                <i>添加布控</i>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="close"  onClick={this.delete.bind(this, this.state.selectedRowKeys)} >删除选中</Button>
+              <div className="btn" onClick={this.delete.bind(this, this.state.selectedRowKeys)}>
+                <Icon type="close"></Icon>
+                <i>删除选中</i>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="download" >导入Excel</Button>
+              <div className="btn">
+                <Icon type="download"></Icon>
+                <i>导入Excel</i>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="upload" >导出</Button>
+              <div className="btn">
+                <Icon type="upload"></Icon>
+                <i>导出</i>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="download" >下载模板</Button>
+              <div className="btn">
+                <Icon type="download"></Icon>
+                <i>下载模板</i>
+              </div>
             </Col>
           </Row>
         </div>

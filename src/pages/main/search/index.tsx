@@ -1,4 +1,4 @@
-import { DatePicker, Input, Button, Row, Col, Table, message } from 'antd';
+import { DatePicker, Input, Row, Col, Table, message, Icon } from 'antd';
 import { observable } from 'mobx'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
@@ -193,10 +193,16 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                />
             </Col>
             <Col span={2}>
-              <Button size="small" className="export-btn" icon="search" onClick={this.search}>搜索</Button>
+              <div className="btn" onClick={this.search}>
+                <Icon type="search"></Icon>
+                <i>搜索</i>
+              </div>
             </Col>
             <Col offset={6} span={3}>
-              <Button className="export-btn" size="small" icon="search" onClick={this.export}>导出为Excel</Button>
+            <div className="btn" onClick={this.export}>
+                <Icon type="search"></Icon>
+                <i>导出为Excel</i>
+              </div>
             </Col>
           </Row>
         </div>
