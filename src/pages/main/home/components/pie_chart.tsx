@@ -66,7 +66,7 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
     }
   }
   public async getChartsData  () {
-    const res: any = await this.homeService.areaCount({
+    const res: any = await this.homeService.getAreaCount({
       start: this.startMoment.valueOf(),
       end: this.endMoment.valueOf()
     })
@@ -86,17 +86,18 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
     }
   }
   public formatActiveObj () {
-    this.SData.sort((a: any, b: any): number => {
+    const SData: any[] = [...this.SData]
+    SData.sort((a: any, b: any): number => {
       if (a.qsCount > b.qsCount) {
        return  1
       } else {
        return -1
       }
     })
-    const total = this.SData[0].value + this.SData[1].value
+    const total = SData[0].value + SData[1].value
     this.activeObj = {
-      value: (100 * this.SData[0].value / total).toFixed(2) + '%',
-      name: this.SData[0].name
+      value: (100 * SData[0].value / total).toFixed(2) + '%',
+      name: SData[0].name
     } 
   }
   public drawEcharts (SData: any) {

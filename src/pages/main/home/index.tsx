@@ -34,12 +34,11 @@ export default class Home extends React.Component<HomePorps, {}> {
   }
   
   public componentDidMount () {
-    // console.log('index componentDidMount')
     this.getStatCards()
   }
 
   public async getStatCards() {
-    const res: any = await this.homeService.statCards()
+    const res: any = await this.homeService.getStatCards()
     if (res.status === 0) {
       this.cardsData = res.data
       this.dayData = [

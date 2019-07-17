@@ -19,12 +19,16 @@ export class HomeService extends Service {
     return this.get('/index/city_count', data)
   }
 
-  @action public async areaCount (data: any = {}): Promise<any> {
+  @action public async getAreaCount (data: any = {}): Promise<any> {
     return this.get('/index/qs_by', data)
   }
 
-  @action public async statCards (data: any = {}): Promise<any> {
+  @action public async getStatCards (data: any = {}): Promise<any> {
     return this.get('/index/stat_cards', data)
+  }
+
+  @action public async getCoord (data: any = {}): Promise<any> {
+    return this.get('/index/coord', data)
   }
 }
 

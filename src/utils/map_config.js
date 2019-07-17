@@ -33,17 +33,9 @@ const gis = {
           6.7055225372314453125E-7
         ]
       });
-    const url = (() => {
-      switch (type) {
-        case 1:
-          // return 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/PGIS25W/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
-          return 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/SL/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
-        case 2:
-          return 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/SL/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
-      }
-    })()
-    const center = type==1?[28.6853536800, 115.8530407800]:[28.688389, 115.859096]
-    const zoom = type==1?12:14
+    const url = 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/SL/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
+    const center = type==='by'?[28.6853536800, 115.8530407800]:[28.688389, 115.859096]
+    const zoom = type==='by'?12:14
 
     this.map = L.map(el, {
       crs: crs,
@@ -111,8 +103,7 @@ const gis = {
     function onEachFeature(feature, layer) {
       layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: showCount
+        mouseout: resetHighlight
       });
     }
     function highlightFeature(e) {
@@ -135,9 +126,6 @@ const gis = {
     const resetHighlight = (e)=> {
       this.geojson.resetStyle(e.target);
       e.target.closePopup()
-    }
-    function showCount(e){
-
     }
 
     this.geojson = L.geoJson(statesData, {

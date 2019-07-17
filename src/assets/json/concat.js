@@ -99,8 +99,8 @@ const concat = {
         fontSize: 16
       }
     },
-    tooltip:{
-      // formatter: "{a} <br/> {b}:{c}"
+    tooltip : {
+      trigger: 'axis'
     },
     grid: {
       top: 30,
