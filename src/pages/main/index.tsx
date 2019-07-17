@@ -91,7 +91,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
                     component={ImportantArea}
                   />
                   <Route
-                    path="/main/search"
+                    path="/main/warning"
                     component={Warning}
                   />
                   <Redirect to="/main/warning" />
