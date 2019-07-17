@@ -157,7 +157,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
       onChange: this.onSelectChange,
     }
     return (
-      <div className="home-main">
+      <div className="search-main">
         <div className="operate-bar">
           <Row>
             <Col span={5}>
