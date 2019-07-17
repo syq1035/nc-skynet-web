@@ -16,11 +16,11 @@ export class WarningService extends Service {
   }
 
   @action public async edit (data: any = {}): Promise<any> {
-    return this.put('/edit', data)
+    return this.put('/update', data)
   }
 
-  @action public async delete (data: any = {}): Promise<any> {
-    return this.post('/del', data)
+  @action public async deleteC (data: any = {}): Promise<any> {
+    return this.delete('/del', data)
   }
 
   @action public async getDetail (data: any = {}): Promise<any> {

@@ -8,11 +8,13 @@ import { WarningService } from 'src/services/warning'
 export interface Addprops {
   visible: boolean
   isEdit: boolean
+  onRef: (ref: React.Component) => void
   close: () => void
   refresh: () => void
 }
 
 interface DataProp {
+  id: number
   police_name: string
   police_id: string
   controller_name: string
@@ -21,7 +23,6 @@ interface DataProp {
 
 class ModalProps {
   public className: string = 'add-modal'
-  public title: string = '添加布控'
   public centered: boolean = true
   public cancelText: string = '取消'
   public okText: string = '确定'
@@ -40,17 +41,20 @@ class ModalProps {
 export default class Add extends React.Component<Addprops, {}> {
 
   @observable public data: DataProp
+  @observable public title: string = '添加布控'
   public userStore: UserStore
   public warningService: WarningService
   public modalProps: any
   constructor (props: any) {
     super(props)
+    this.warningService = props.warningService
     this.modalProps = new ModalProps(this.ok, this.cancel)
     this.refresh()
   }
 
   public refresh = () => {
     this.data = {
+      id: 0,
       police_name: '',
       police_id: '',
       controller_name: '',
@@ -58,30 +62,57 @@ export default class Add extends React.Component<Addprops, {}> {
     }
   }
 
-  public ok = async () => {
-    if (!this.data.police_name) {
-      message.error('责任民警不能为空')
-      return
-    }
-    if (!this.data.police_id) {
-      message.error('警号不能为空')
-      return
-    }
-    if (!this.data.controller_name) {
-      message.error('管控人不能为空')
-      return
-    }
-    if (!this.data.mac) {
-      message.error('布控Mac不能为空')
-      return
-    }
-    const res: any = await this.warningService.add(this.data)
+  public getDetail = async (id: number) => {
+    const res: any = await this.warningService.getDetail({
+      id
+    })
     if (res.status === 0) {
-      message.success('添加成功')
-      this.refresh()
-      this.props.refresh()
-      this.props.close()
+      this.data = {
+        id,
+        police_name: res.data.police_name,
+        police_id: res.data.police_id,
+        controller_name: res.data.controller_name,
+        mac: res.data.mac
+      }
+      this.title = '编辑布控'
     }
+  }
+
+  public ok = async () => {
+    if (this.data.id) {
+      console.log(this.data)
+      const res: any = await this.warningService.edit(this.data)
+      if (res.status === 0) {
+        message.success('编辑成功')
+        this.refresh()
+        this.props.refresh()
+        this.props.close()
+      }
+    } else {
+      if (!this.data.police_name) {
+        message.error('责任民警不能为空')
+        return
+      }
+      if (!this.data.police_id) {
+        message.error('警号不能为空')
+        return
+      }
+      if (!this.data.controller_name) {
+        message.error('管控人不能为空')
+        return
+      }
+      if (!this.data.mac) {
+        message.error('布控Mac不能为空')
+        return
+      }
+      const res: any = await this.warningService.add(this.data)
+      if (res.status === 0) {
+        message.success('添加成功')
+        this.refresh()
+        this.props.refresh()
+        this.props.close()
+      }
+    }   
   }
 
   public cancel = () => {
@@ -89,13 +120,16 @@ export default class Add extends React.Component<Addprops, {}> {
     this.props.close()
   }
 
+  public componentDidMount () {
+    this.props.onRef(this)
+  }
   public componentWillReceiveProps (props: any) {
     this.modalProps.visible = props.visible
   }
 
   public render () {
     return (
-      <Modal {...this.modalProps}>
+      <Modal {...this.modalProps} title={this.title}>
         <div className="form-input">
           <label>责任民警</label>
           <Input
