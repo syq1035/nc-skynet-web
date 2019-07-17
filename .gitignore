@@ -11,7 +11,7 @@
 
 # misc
 yarn.lock
-proxy.conf.js
+#proxy.conf.js
 .DS_Store
 .env.local
 .env.development.local
@@ -23,4 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 .history
 
-proxy.conf.js

@@ -14,6 +14,7 @@ export class SearchService extends Service {
   @action public async getList (data: any = {}): Promise<any> {
     return this.get('/list', data)
   }
+  
 }
 
 export default new SearchService()

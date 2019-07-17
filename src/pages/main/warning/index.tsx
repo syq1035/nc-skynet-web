@@ -210,7 +210,7 @@ export default class Warning extends React.Component<{}, {}> {
       onChange: this.onSelectChange,
     }
     return (
-      <div className="home-main">
+      <div className="search-main">
         <Add 
           visible={this.addModal}
           isEdit={this.isEdit}

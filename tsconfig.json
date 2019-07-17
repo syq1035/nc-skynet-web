@@ -23,12 +23,14 @@
   },
   "exclude": [
     "node_modules",
+    "public",
     "build",
     "scripts",
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "src/utils/map_config.js"
   ],
   "types": [
     "typePatches",

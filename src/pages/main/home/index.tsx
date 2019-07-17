@@ -1,105 +1,106 @@
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
+import { observable } from 'mobx'
 import { UserStore } from 'src/stores/modules/user'
 import { RouteComponentProps } from 'react-router';
-// import { DatePicker } from 'antd'
-// import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { message } from 'antd'
 import LineBarChart from './components/line_bar_chart'
 import PieChart from './components/pie_chart'
-
-import themeData from 'src/assets/json/halloween.json'
+import Card from './components/card'
+import { HomeService } from 'src/services/home'
 
 interface HomePorps extends RouteComponentProps {
   userStore: UserStore
 }
 
-@inject('userStore', 'echarts')
+@inject('userStore', 'homeService')
 @observer
 export default class Home extends React.Component<HomePorps, {}> {  
 
   public userStore: UserStore
-  public charts: React.RefObject<any>
   public echarts: any
   public myecharts: any
+  public homeService: HomeService
+  @observable public dayData: any[]
+  @observable public weekData: any[]
+  @observable public monthData: any[]
+  @observable  public cardsData: any
 
   constructor (props: any) {
     super(props)
     this.userStore = props.userStore
-    this.echarts = props.echarts
-    this.charts = React.createRef()
-    this.echarts.registerTheme('halloween', themeData)
+    this.homeService = props.homeService
 
-  }
-  public onDateChange(value: any, dateString: [string, string]) {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
   }
   
-  public onOk(value: any) {
-    console.log('onOk: ', value);
-  }
   public componentDidMount () {
-    //
+    // console.log('index componentDidMount')
+    this.getStatCards()
   }
 
+  public async getStatCards() {
+    const res: any = await this.homeService.statCards()
+    if (res.status === 0) {
+      this.cardsData = res.data
+      this.dayData = [
+        {value: res.data.today_qs.value, name: '秋水广场'},
+        {value: res.data.today_by.value, name: '八一广场'},
+      ]
+      this.weekData = [
+        {value: res.data.current_week_qs, name: '秋水广场'},
+        {value: res.data.current_week_by, name: '八一广场'},
+      ]
+      this.monthData = [
+        {value: res.data.current_month_qs, name: '秋水广场'},
+        {value: res.data.current_month_by, name: '八一广场'},
+      ]
+    } else {
+      message.error(res.msg || '操作失败')
+    }
+  }
   public render () {
+    const cardsData = this.cardsData
     return (
       <div className="home-main">
         <div className="board-wrapper card-container">
-          <div className="card down">
-            <div className="card-title">本月采集量</div>
-            <div className="card-total">3075</div>
-            <div className="card-rate">
-              <div className="text">环比</div>
-              <div className="rate">
-                <i className="arrow"></i>
-                <span className="num">-78%</span>
-              </div>
-            </div>
-          </div>
-          <div className="card up">
-            <div className="card-title"></div>
-            <div className="card-total"></div>
-            <div className="card-rate">
-              <div className="text"></div>
-              <div className="rate">
-                <i className="arrow"></i>
-                <span className="num">78%</span>
-              </div>
-            </div>
-          </div>
-          <div className="card"></div>
-          <div className="card"></div>
-          <div className="card"></div>
-          <div className="card"></div>
+          {
+            cardsData ? 
+            <>
+              <Card title={'本月采集量'} 
+              value={cardsData.current_month.value} 
+              lastValue={cardsData.current_month.last_value}></Card>
+              <Card title={'本周采集量'}
+              value={cardsData.current_week.value} 
+              lastValue={cardsData.current_week.last_value}></Card>
+              <Card title={'今日采集量'}
+              value={cardsData.today.value} 
+              lastValue={cardsData.today.last_value}></Card>
+              <Card title={'近三日采集量'}
+              value={cardsData.last_three_days.value} 
+              lastValue={cardsData.last_three_days.last_value}></Card>
+              <Card title={'今日八一广场采集量'}
+              value={cardsData.today_by.value} 
+              lastValue={cardsData.today_by.last_value}></Card>
+              <Card title={'今日秋水广场采集量'}
+              value={cardsData.today_qs.value} 
+              lastValue={cardsData.today_qs.last_value}></Card>
+            </>
+            : ''
+          }
         </div>
         <div className="board-wrapper important-place">
           <div className="border-title">重点区域采集对比</div>
           <div className="chart-wrapper top-right">
             <div className="pie left-pie">
-              {/* <div className="time">
-                <span className="text">今日</span>
-                <span className="text">本周</span>
-                <span className="text">本月</span>
-              </div> */}
               <div className="pie-charts">
                 <div className="day">
-                  <PieChart type={'day'} SData={[
-                    {value: 335, name: '直接访问'},
-                    {value: 310, name: '邮件营销'}
-                  ]}></PieChart>
+                  <PieChart type={'day'} statData={this.dayData}></PieChart>
                 </div>
                 <div className="week">
-                <PieChart type={'week'}  SData={[
-                    {value: 35, name: '直接访问'},
-                    {value: 310, name: '邮件营销'}
-                  ]}></PieChart>
+                  <PieChart type={'week'} statData={this.weekData}></PieChart>
                 </div>
                 <div className="month">
-                <PieChart type={'month'}  SData={[
-                    {value: 355, name: '直接访问'},
-                    {value: 10, name: '邮件营销'}
-                  ]}></PieChart>
+                  <PieChart type={'month'} statData={this.monthData}></PieChart>
                 </div>
               </div>
               <div className="pie-point">
@@ -112,25 +113,8 @@ export default class Home extends React.Component<HomePorps, {}> {
               </div>
             </div>
             <div className="pie right-pie">
-              {/* <div className="time">
-                <div>自定义时间段</div>
-                <DatePicker.RangePicker
-                  // style={this.timeRagneStyle}
-                  size="small"
-                  className="time-range"
-                  showTime={{ format: 'HH' }}
-                  format="YYYY-MM-DD HH"
-                  locale={locale}
-                  placeholder={['开始日期', '结束日期']}
-                  onChange={this.onDateChange}
-                  onOk={this.onOk}
-                />
-              </div> */}
               <div className="pie-charts">
-                <PieChart type={'range'}SData={[
-                    {value: 355, name: '直接访问'},
-                    {value: 310, name: '邮件营销'}
-                  ]}></PieChart>
+                <PieChart type={'range'} statData={[]}></PieChart>
               </div>
               <div className="pie-point">
                 <span>
@@ -152,13 +136,13 @@ export default class Home extends React.Component<HomePorps, {}> {
         <div className="board-wrapper">
           <div className="border-title">归属地分析</div>
           <div className="chart-wrapper">   
-          {/* <LineBarChart type={'bar'} serviceType={'cityCount'} isShowPlaceFilter={false}></LineBarChart> */}
+          <LineBarChart type={'bar'} serviceType={'cityCount'} isShowPlaceFilter={true}></LineBarChart>
           </div>
         </div>
         <div className="board-wrapper bottom">
           <div className="border-title">设备采集数据分析</div>
           <div className="chart-wrapper">
-          {/* <LineBarChart type={'bar'} serviceType={'deviceCount'} isShowPlaceFilter={false}></LineBarChart> */}
+          <LineBarChart type={'bar'} serviceType={'deviceCount'} isShowPlaceFilter={false}></LineBarChart>
           </div>
         </div>
       </div>
