@@ -13,10 +13,12 @@ export default class Warning extends React.Component<{}, {}> {
 
   public userStore: UserStore
   public warningService: WarningService
+  public addRef: any
 
   @observable public addModal: boolean = false
   @observable public isDetail: boolean = false
   @observable public isEdit: boolean = false
+  @observable public itemId: number = 0
   @observable public tableData: any[]
   @observable public page: number = 1
   @observable public total: number
@@ -34,18 +36,22 @@ export default class Warning extends React.Component<{}, {}> {
     },
     {
       title: '责任民警',
-      dataIndex: 'policeName',
-      key: 'policeName'
+      dataIndex: 'police_name',
+      key: 'police_name'
     },
     {
       title: '警号',
-      dataIndex: 'policeId',
-      key: 'policeId'
+      dataIndex: 'police_id',
+      key: 'police_id'
     },
     {
       title: '管控人(姓名/身份证)',
-      dataIndex: 'controllerName',
-      key: 'controllerName'
+      key: 'controller',
+      render: (text: any, record: any) => (
+        <span>
+          {record.controller_name}/{record.controller_id}
+        </span>
+      ),
     },
     {
       title: '布控Mac',
@@ -64,8 +70,8 @@ export default class Warning extends React.Component<{}, {}> {
     },
     {
       title: '布控时间',
-      dataIndex: 'update_time',
-      key: 'update_time'
+      dataIndex: 'create_time',
+      key: 'create_time'
     },
     {
       title: '备注',
@@ -74,11 +80,11 @@ export default class Warning extends React.Component<{}, {}> {
     },
     {
       title: '操作',
-      dataIndex: 'imp_time',
+      key: 'action',
       render: (text: any, record: any) => (
         <span>
           <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
-          <a href="javascript:;" onClick={this.showEdit} >
+          <a href="javascript:;" onClick={this.showEdit.bind(this, record.id)} >
             <Icon type="edit"/>编辑
           </a>
           <a href="javascript:;" onClick={this.delete.bind(this, [record.id])}>
@@ -118,10 +124,11 @@ export default class Warning extends React.Component<{}, {}> {
     }
   }
 
-  public delete = async (ids: any) => {
-    console.log(ids)
-    const res: any = await this.warningService.delete({
-      ids
+  public delete = async (id: any) => {
+    console.log(id)
+    console.log(JSON.stringify(id))
+    const res: any = await this.warningService.deleteC({
+      ids: JSON.stringify(id)
     })
     if (res.status === 0) {
       message.success('删除成功')
@@ -167,14 +174,20 @@ export default class Warning extends React.Component<{}, {}> {
     this.isDetail = false
   }
 
-  public showEdit = () => {
+  public showEdit = (id: any) => {
+    this.itemId = id
     this.isEdit = true
+    this.addRef.getDetail(id)
     this.addModal = true
   }
 
   public closeEdit = () => {
     this.isEdit = false
     this.addModal = false
+  }
+
+  public onRef = (ref: React.Component) => {
+    this.addRef = ref
   }
 
   constructor (props: any) {
@@ -201,6 +214,7 @@ export default class Warning extends React.Component<{}, {}> {
         <Add 
           visible={this.addModal}
           isEdit={this.isEdit}
+          onRef={this.onRef}
           refresh={this.searchData} 
           close={this.closeAddModal}/>
         <div className="operate-bar">
@@ -251,7 +265,7 @@ export default class Warning extends React.Component<{}, {}> {
               <Button className="export-btn btn" size="small" icon="plus" onClick={this.showAddModal}>添加布控</Button>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="close" >删除选中</Button>
+              <Button className="export-btn btn" size="small" icon="close"  onClick={this.delete.bind(this, this.state.selectedRowKeys)} >删除选中</Button>
             </Col>
             <Col span={2}>
               <Button className="export-btn btn" size="small" icon="download" >导入Excel</Button>

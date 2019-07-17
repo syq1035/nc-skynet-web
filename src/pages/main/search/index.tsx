@@ -56,8 +56,12 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     },
     {
       title: '坐标',
-      dataIndex: 'lat',
       key: 'lat',
+      render: (text: any, record: any) => (
+        <span>
+          {record.lng},{record.lat}
+        </span>
+      ),
     },
     {
       title: '采集时间',
