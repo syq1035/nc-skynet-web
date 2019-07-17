@@ -8,6 +8,8 @@ import { observable } from 'mobx'
 
 import Home from './home'
 import Search from './search'
+import ImportantArea from './important_area'
+import Warning from './warning'
 
 import { UserService } from 'src/services/user'
 import { UserStore } from 'src/stores/modules/user'
@@ -55,7 +57,9 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
           <div className="title"></div>
           <div className="menu">
             <NavLink exact activeClassName="active" to="/main/home">首页</NavLink>
-            <NavLink exact to="/main/search">数据搜索</NavLink>
+            <NavLink exact to="/main/search">数据查询</NavLink>
+            <NavLink exact to="/main/importantarea">重点区域</NavLink>
+            <NavLink exact to="/main/warning">布控预警</NavLink>
           </div>
           <div className="user">
             <div className="avatar">
@@ -82,7 +86,15 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
                     path="/main/search"
                     component={Search}
                   />
-                  <Redirect to="/main/home" />
+                  <Route
+                    path="/main/importantarea"
+                    component={ImportantArea}
+                  />
+                  <Route
+                    path="/main/warning"
+                    component={Warning}
+                  />
+                  <Redirect to="/main/warning" />
                 </Switch>
             </CSSTransition>
           </TransitionGroup>

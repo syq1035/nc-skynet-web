@@ -16,7 +16,7 @@ const concat = {
     grid: {
       top: 30,
       bottom: 25,
-      left: 30,
+      left: 40,
       right: 10
     },
     xAxis: {
@@ -105,7 +105,7 @@ const concat = {
     grid: {
       top: 30,
       bottom: 25,
-      left: 30,
+      left: 40,
       right: 10
     },
     textStyle: {

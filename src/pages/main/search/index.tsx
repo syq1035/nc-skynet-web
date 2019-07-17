@@ -27,38 +27,47 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     {
       title: '1/107项',
       dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '事件ID',
       dataIndex: 'adivision',
+      key: 'adivision',
     },
     {
       title: '设备ID',
       dataIndex: 'bts_id',
+      key: 'bts_id',
     },
     {
       title: '设备名称',
       dataIndex: 'bts_name',
+      key: 'bts_name',
     },
     {
       title: '前台序列号',
       dataIndex: 'sn',
+      key: 'sn',
     },
     {
       title: 'MAC',
       dataIndex: 'mac',
+      key: 'mac',
     },
     {
       title: '坐标',
       dataIndex: 'lat',
+      key: 'lat',
     },
     {
       title: '采集时间',
       dataIndex: 'collect_time',
+      key: 'collect_time',
     },
     {
       title: '入库时间',
       dataIndex: 'imp_time',
+      key: 'imp_time',
     }
   ];
 
@@ -82,6 +91,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
       this.total = res.data.total
     }
   }
+
   public export = async () => {
     const res: any = await this.searchService.exportExcel({
       'wifiSearchVo': {
@@ -107,7 +117,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     this.bts = ''
   }
 
-  public onSelectChange: any = (selectedRowKeys: any) => {
+  public onSelectChange = (selectedRowKeys: any) => {
     this.setState({ selectedRowKeys });
   }
   
@@ -179,7 +189,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                />
             </Col>
             <Col span={2}>
-            <Button size="small" className="export-btn" icon="search" onClick={this.search}>搜索</Button>
+              <Button size="small" className="export-btn" icon="search" onClick={this.search}>搜索</Button>
             </Col>
             <Col offset={6} span={3}>
               <Button className="export-btn" size="small" icon="search" onClick={this.export}>导出为Excel</Button>
@@ -188,6 +198,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
         </div>
         <div className="search-wrapper">
             <Table size="small"
+              rowKey="id"
               pagination={{
                 ...this.pagination,
                 current: this.page,

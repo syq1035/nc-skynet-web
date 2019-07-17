@@ -2,7 +2,8 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react';
 import { UserStore } from 'src/stores/modules/user'
 import { RouteComponentProps } from 'react-router';
-import { DatePicker } from 'antd'
+// import { DatePicker } from 'antd'
+// import locale from 'antd/lib/date-picker/locale/zh_CN';
 import LineBarChart from './components/line_bar_chart'
 import PieChart from './components/pie_chart'
 
@@ -76,26 +77,26 @@ export default class Home extends React.Component<HomePorps, {}> {
           <div className="border-title">重点区域采集对比</div>
           <div className="chart-wrapper top-right">
             <div className="pie left-pie">
-              <div className="time">
+              {/* <div className="time">
                 <span className="text">今日</span>
                 <span className="text">本周</span>
                 <span className="text">本月</span>
-              </div>
+              </div> */}
               <div className="pie-charts">
                 <div className="day">
-                  <PieChart SData={[
+                  <PieChart type={'day'} SData={[
                     {value: 335, name: '直接访问'},
                     {value: 310, name: '邮件营销'}
                   ]}></PieChart>
                 </div>
                 <div className="week">
-                <PieChart SData={[
+                <PieChart type={'week'}  SData={[
                     {value: 35, name: '直接访问'},
                     {value: 310, name: '邮件营销'}
                   ]}></PieChart>
                 </div>
                 <div className="month">
-                <PieChart SData={[
+                <PieChart type={'month'}  SData={[
                     {value: 355, name: '直接访问'},
                     {value: 10, name: '邮件营销'}
                   ]}></PieChart>
@@ -111,16 +112,22 @@ export default class Home extends React.Component<HomePorps, {}> {
               </div>
             </div>
             <div className="pie right-pie">
-              <div className="time">
+              {/* <div className="time">
                 <div>自定义时间段</div>
                 <DatePicker.RangePicker
+                  // style={this.timeRagneStyle}
+                  size="small"
+                  className="time-range"
+                  showTime={{ format: 'HH' }}
+                  format="YYYY-MM-DD HH"
+                  locale={locale}
                   placeholder={['开始日期', '结束日期']}
                   onChange={this.onDateChange}
                   onOk={this.onOk}
                 />
-              </div>
+              </div> */}
               <div className="pie-charts">
-                <PieChart SData={[
+                <PieChart type={'range'}SData={[
                     {value: 355, name: '直接访问'},
                     {value: 310, name: '邮件营销'}
                   ]}></PieChart>
@@ -139,19 +146,19 @@ export default class Home extends React.Component<HomePorps, {}> {
         <div className="board-wrapper">
           <div className="border-title">采集数据趋势分析</div>
           <div className="chart-wrapper">
-            <LineBarChart type={'line'} XData={['9月11日', '10月12日', '10月13日', '10月14日', '10月15日', '10月16日', '10月17日']} SData={[55, 61, 59, 62, 54, 67, 66]} isShowPlaceFilter={true}></LineBarChart>
+            <LineBarChart type={'line'} serviceType={'traffic'} isShowPlaceFilter={false}></LineBarChart>
           </div>
         </div>
         <div className="board-wrapper">
           <div className="border-title">归属地分析</div>
-          <div className="chart-wrapper">
-            <LineBarChart type={'line'} XData={['10月11日', '10月12日', '10月13日', '10月14日', '10月15日', '10月16日', '10月17日']} SData={[55, 61, 59, 100, 54, 67, 66]} isShowPlaceFilter={false}></LineBarChart>
+          <div className="chart-wrapper">   
+          {/* <LineBarChart type={'bar'} serviceType={'cityCount'} isShowPlaceFilter={false}></LineBarChart> */}
           </div>
         </div>
         <div className="board-wrapper bottom">
           <div className="border-title">设备采集数据分析</div>
           <div className="chart-wrapper">
-          <LineBarChart type={'bar'} XData={['11月11日', '10月12日', '10月13日', '10月14日', '10月15日', '10月16日', '10月17日']} SData={[55, 61, 59, 62, 200, 67, 66]} isShowPlaceFilter={false}></LineBarChart>
+          {/* <LineBarChart type={'bar'} serviceType={'deviceCount'} isShowPlaceFilter={false}></LineBarChart> */}
           </div>
         </div>
       </div>
