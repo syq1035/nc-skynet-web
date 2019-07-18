@@ -1,6 +1,6 @@
 import { observer, inject } from 'mobx-react'
 import * as React from 'react'
-import { message, Icon } from 'antd'
+import { message, Icon, Dropdown, Menu } from 'antd'
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
@@ -10,33 +10,59 @@ import Home from './home'
 import Search from './search'
 import ImportantArea from './important_area'
 import Warning from './warning'
+import ModifyPassword from './modals/modify_password'
 
 import { UserService } from 'src/services/user'
 import { UserStore } from 'src/stores/modules/user'
+import { PasswordStore } from 'src/stores/modules/password'
 
-@inject('userService', 'userStore')
+@inject('userService', 'userStore', 'passwordStore')
 @observer
 class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public userService: UserService
   public userStore: UserStore
+  public passwordStore: PasswordStore
 
   @observable public menuList: any[] = []
   @observable public selectItem: string[]
   @observable public selectExpand: string[] = []
+  @observable public name: string
+  @observable public modifyPasswordModal: boolean = false
 
   constructor (props: any) {
     super(props)
     this.initConfig(props)
+    this.getProfile()
   }
 
   public initConfig (props: any): void {
     this.userService = props.userService
     this.userStore = props.userStore
+    this.passwordStore = props.passwordStore
   }
 
   public chooseMenu = async (item: any) => {
     //
+  }
+
+  public closeModifyPasswordModal = () => {
+    this.passwordStore.closeModal()
+    
+  }
+
+  public showModifyPasswordModal = () => {
+    this.passwordStore.showModal()
+    console.log(this.passwordStore.getModalVisible)
+  }
+
+  public async getProfile () {
+    const res = await this.userService.getProfile()
+    if (res.status === 0) {
+      this.name = res.data.name
+    } else {
+      message.error(res.msg || '操作失败')
+    }
   }
 
   public sigout = async (): Promise<any> => {
@@ -51,6 +77,15 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
   public render () {
     const location = this.props.location
     const { pathname } = location
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <span onClick={this.showModifyPasswordModal}>
+            修改密码
+          </span>
+        </Menu.Item>
+      </Menu>
+    );
     return (
       <div className="main">
         <div className="header">
@@ -63,9 +98,12 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
           </div>
           <div className="user">
             <div className="avatar">
-              <Icon type="user" />
+              <Dropdown overlay={menu}
+                placement="bottomCenter">
+                <Icon type="user" />
+              </Dropdown>
             </div>
-            <div className="user-name">admin</div>
+            <div className="user-name">{this.name}</div>
             <div className="logout">
               <Icon type="logout" />
             </div>
@@ -99,6 +137,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             </CSSTransition>
           </TransitionGroup>
         </div>
+        <ModifyPassword/>
       </div>
     )
   }

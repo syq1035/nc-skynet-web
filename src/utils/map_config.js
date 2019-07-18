@@ -1,3 +1,9 @@
+import * as L from 'leaflet'
+import 'proj4'
+import 'proj4leaflet'
+import Mapv from '../lib/Mapv.js'
+// import h337 from 'heatmap.js'
+// import HeatmapOverlay from 'leaflet-heatmap'
 
 const gis = {
   map:null,
@@ -6,6 +12,8 @@ const gis = {
   mapv:null,
   mapvLayer:null,
   wh_gis_init(type, el){
+    // debugger
+    // this.map = null
     const crs = new L.Proj.CRS("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
       {
         origin: [-180.0, 90.0],
@@ -34,8 +42,8 @@ const gis = {
         ]
       });
     const url = 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/SL/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
-    const center = type==='by'?[28.6853536800, 115.8530407800]:[28.688389, 115.859096]
-    const zoom = type==='by'?12:14
+    const center = type==='by'?[28.679627, 115.901053]:[28.688389, 115.859096]
+    const zoom = 14
 
     this.map = L.map(el, {
       crs: crs,
@@ -48,6 +56,10 @@ const gis = {
 
     L.tileLayer(url).addTo(this.map);
 
+  },
+  setCenter(type){
+    const center = type==='by'?[28.679627, 115.901053]:[28.688389, 115.859096]
+    this.map.setView(center)
   },
   drawArea(data){
     let features = []
@@ -67,7 +79,7 @@ const gis = {
       })
     })
 
-    let statesData = {
+    let sData = {
       type: "FeatureCollection",
       features: features
     }
@@ -128,7 +140,7 @@ const gis = {
       e.target.closePopup()
     }
 
-    this.geojson = L.geoJson(statesData, {
+    this.geojson = L.geoJson(sData, {
       style: style,
       onEachFeature: onEachFeature
     }).addTo(this.map);
@@ -141,13 +153,12 @@ const gis = {
         count: Number(item[1])
       }
     })
-
-    this.mapv = new window.Mapv({
+    this.mapv = new Mapv({
       map: this.map,
       useLeaflet: true,
     })
 
-    this.mapvLayer = new window.Mapv.Layer({
+    this.mapvLayer = new Mapv.Layer({
       mapv: this.mapv, // 对应的mapv实例
       zIndex: 1, // 图层层级
       dataType: 'point', // 数据类型，点类型
@@ -183,7 +194,5 @@ const gis = {
     this.mapvLayer.setMapv(null)
   }
 }
-
-
 
 export default gis

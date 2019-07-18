@@ -35,15 +35,17 @@ export default class ImportantArea extends React.Component<RouteComponentProps, 
     this.getMapData('update')
   }
   public componentDidMount () {
-    this.getMapData('update')
+    this.getMapData()
     this.initMap()
   }
   public tabChange = (type: string) => {
     this.type = type
-    this.initMap()
+    gis.setCenter(type)
   }
   public initMap() {
-    gis.wh_gis_init(this.type, 'globalMap')
+    gis.wh_gis_init(this.type, this.mapRef.current)
+    // gis.wh_gis_init(this.type, 'areaMap')
+    // gis.test('areaMap')
   }
   public getMapData(type: string = '') {
     this.drawHeatMap(type)
@@ -96,7 +98,7 @@ export default class ImportantArea extends React.Component<RouteComponentProps, 
             />
           </div>
         </div>
-        <div className="area-map" ref={this.mapRef}></div>
+        <div className="area-map" ref={this.mapRef} id="areaMap"></div>
       </div>
     )
   }

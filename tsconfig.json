@@ -30,7 +30,8 @@
     "webpack",
     "jest",
     "src/setupTests.ts",
-    "src/utils/map_config.js"
+    "src/utils/*.js",
+    "src/lib/*.js"
   ],
   "types": [
     "typePatches",

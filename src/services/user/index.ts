@@ -22,6 +22,10 @@ export class UserService extends Service {
   @action public async getUseList (data: any = {}): Promise<any> {
     return this.get('/list', data)
   }
+  
+  @action public async changepwd (data: any = {}): Promise<any> {
+    return this.put('/change_pwd', data)
+  }
 }
 
 export default new UserService()

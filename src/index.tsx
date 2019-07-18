@@ -13,6 +13,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import 'antd/dist/antd.css'
 import './assets/stylus/index.styl'
+import 'leaflet/dist/leaflet.css'
 
 ReactDOM.render(
   <Provider {...stores} {...services} echarts={echarts}>

@@ -22,7 +22,6 @@ class App extends React.Component<{}, {}> {
       }
     }
   }
-
   public render () {
     return (
       <LocaleProvider locale={zh_CN}>
