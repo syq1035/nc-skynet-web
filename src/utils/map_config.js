@@ -273,7 +273,6 @@ const gis = {
         count: Number(item[1])
       }
     })
-    console.log(mapJson)
     this.heatmapLayer.setData({
       data:mapJson
     });

@@ -94,7 +94,6 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
        return 1
       }
     })
-    console.log('SData', SData)
     const total = SData[0].value + SData[1].value
     this.activeObj = {
       value: (100 * SData[0].value / total).toFixed(2) + '%',

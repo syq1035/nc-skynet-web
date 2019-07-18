@@ -53,7 +53,6 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public showModifyPasswordModal = () => {
     this.passwordStore.showModal()
-    console.log(this.passwordStore.getModalVisible)
   }
 
   public async getProfile () {

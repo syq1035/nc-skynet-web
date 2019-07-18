@@ -110,7 +110,6 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     })
     if (res.status === 0) {
       message.success('新建任务成功')
-      console.log('新建任务')
     }
   }
 
