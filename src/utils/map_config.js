@@ -3,7 +3,7 @@ import 'proj4'
 import 'proj4leaflet'
 import Mapv from '../lib/Mapv.js'
 // import h337 from 'heatmap.js'
-// import HeatmapOverlay from 'leaflet-heatmap'
+import HeatmapOverlay from 'leaflet-heatmap'
 
 const gis = {
   map:null,
@@ -12,8 +12,6 @@ const gis = {
   mapv:null,
   mapvLayer:null,
   wh_gis_init(type, el){
-    // debugger
-    // this.map = null
     const crs = new L.Proj.CRS("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
       {
         origin: [-180.0, 90.0],
@@ -55,6 +53,80 @@ const gis = {
     });
 
     L.tileLayer(url).addTo(this.map);
+
+  },
+  h_wh_gis_init(type, el){
+    const crs = new L.Proj.CRS("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+      {
+        origin: [-180.0, 90.0],
+        resolutions: [
+          0.703125,
+          0.3515625,
+          0.17578125,
+          0.087890625,
+          0.0439453125,
+          0.02197265625,
+          0.010986328125,
+          0.0054931640625,
+          0.00274658203125,
+          0.001373291015625,
+          6.866455078125E-4,
+          3.4332275390625E-4,
+          1.71661376953125E-4,
+          8.58306884765625E-5,
+          4.291534423828125E-5,
+          2.1457672119140625E-5,
+          1.07288360595703125E-5,
+          5.36441802978515625E-6,
+          2.682209014892578125E-6,
+          1.3411045074462890625E-6,
+          6.7055225372314453125E-7
+        ]
+      });
+    const url = 'http://10.137.8.2:7001/PGIS_S_TileMapServer/Maps/SL/EzMap?Service=getImage&Type=RGB&ZoomOffset=1&Col={x}&Row={y}&Zoom={z}&V=1.0.0'
+    const center = type==='by'?[28.679627, 115.901053]:[28.688389, 115.859096]
+    const zoom = 14
+
+    var baseLayer = L.tileLayer(url)
+
+
+    var cfg = {
+      // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+      "radius": .003,
+      "maxOpacity": .8,
+      // scales the radius based on map zoom
+      "scaleRadius": true,
+      // if set to false the heatmap uses the global maximum for colorization
+      // if activated: uses the data maximum within the current map boundaries
+      //   (there will always be a red spot with useLocalExtremas true)
+      "useLocalExtrema": true,
+      // which field name in your data represents the latitude - default "lat"
+      latField: 'lat',
+      // which field name in your data represents the longitude - default "lng"
+      lngField: 'lng',
+      // which field name in your data represents the data value - default "value"
+      valueField: 'count',
+      gradient: {
+          // enter n keys between 0 and 1 here
+          // for gradient color customization
+          '0.4': 'red',
+          '0.6': 'yellow',
+          '0.7': 'lime',
+          '0.8': 'blue',
+          '1.0': 'cyan'
+        }
+    };
+    this.heatmapLayer = new HeatmapOverlay(cfg);
+
+    this.map = L.map(el, {
+      crs: crs,
+      center: center,
+      zoom: zoom,
+      minZoom: 7,
+      maxZoom: 18,
+      layers: [baseLayer, this.heatmapLayer],
+      forceDrawEverything: true
+    });
 
   },
   setCenter(type){
@@ -192,6 +264,25 @@ const gis = {
   },
   removeMapvLayer(){
     this.mapvLayer.setMapv(null)
+  },
+  hDrawHeatMap(data){
+    const mapJson = data.map(item => {
+      return {
+        lng: Number(item[2]),
+        lat: Number(item[3]),
+        count: Number(item[1])
+      }
+    })
+    console.log(mapJson)
+    this.heatmapLayer.setData({
+      data:mapJson
+    });
+  },
+  hRemoveMapvLayer() {
+    this.heatmapLayer.setData({
+      max:0,
+      data:[]
+    });
   }
 }
 

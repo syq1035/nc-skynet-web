@@ -33,7 +33,6 @@ class Login extends React.Component<LoginProps, {}> {
 
   public login = async (e: any): Promise<any> => {
     e.preventDefault()
-    // this.props.history.replace('/main/home')
 
     this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
@@ -43,7 +42,7 @@ class Login extends React.Component<LoginProps, {}> {
         }
         const res = await this.userService.sign(putData)
         if (res.status === 0) {
-          message.success('登录成功')
+          // message.success('登录成功')
           this.userStore.saveLoginData(res.data)
           this.props.history.replace('/main/home')
         } else {

@@ -44,13 +44,17 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
   public componentDidMount () {
     
     this.getChartsData()
-    window.onresize = () => {
-      if (this.serviceType === 'deviceCount') {
-        const {XData, SData} = this.getTrunkDeviceData()
-        this.drawEcharts(XData, SData)
-      } 
-      this.echartsInstance.resize()       
-    }
+    window.addEventListener('resize', this.chartResize)
+  }
+  public componentWillUnmount () {
+    window.removeEventListener('resize', this.chartResize)
+  }
+  public chartResize = () => {
+    if (this.serviceType === 'deviceCount') {
+      const {XData, SData} = this.getTrunkDeviceData()
+      this.drawEcharts(XData, SData)
+    } 
+    this.echartsInstance.resize()   
   }
   public async getChartsData () {
     const { serviceType } = this.props

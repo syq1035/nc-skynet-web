@@ -88,12 +88,13 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
   public formatActiveObj () {
     const SData: any[] = [...this.SData]
     SData.sort((a: any, b: any): number => {
-      if (a.qsCount > b.qsCount) {
-       return  1
+      if (a.value > b.value) {
+       return  -1
       } else {
-       return -1
+       return 1
       }
     })
+    console.log('SData', SData)
     const total = SData[0].value + SData[1].value
     this.activeObj = {
       value: (100 * SData[0].value / total).toFixed(2) + '%',
