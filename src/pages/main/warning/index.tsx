@@ -1,20 +1,30 @@
-import { DatePicker, Input, Button, Row, Col, Table, Icon, message } from 'antd';
+import { DatePicker, Input, Row, Col, Table, Icon, message, Upload } from 'antd';
 import { observable } from 'mobx'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
+import { RouteComponentProps } from 'react-router';
 import { UserStore } from 'src/stores/modules/user'
 import { WarningService } from 'src/services/warning'
+import { TaskService } from 'src/services/task'
 import Add from './modals/add'
+import ExportExcel from 'src/modals/export_excel'
 
 const { RangePicker } = DatePicker;
-@inject('warningService')
+interface WarningPorps extends RouteComponentProps {
+  userStore: UserStore
+}
+@inject('warningService', 'taskService', 'userStore')
 @observer
-export default class Warning extends React.Component<{}, {}> {  
+export default class Warning extends React.Component<WarningPorps, {}> {  
 
   public userStore: UserStore
   public warningService: WarningService
+  public taskService: TaskService
   public addRef: any
+  public exportRef: any
+  public account: any
 
+  @observable public exportModal: boolean = false
   @observable public addModal: boolean = false
   @observable public isDetail: boolean = false
   @observable public isEdit: boolean = false
@@ -27,6 +37,7 @@ export default class Warning extends React.Component<{}, {}> {
   @observable public mac: string = ''
   @observable public startTime: string = ''
   @observable public endTime: string = ''
+  @observable public uploadProps: any
 
   public columns: any = [
     {
@@ -82,7 +93,7 @@ export default class Warning extends React.Component<{}, {}> {
       title: '操作',
       key: 'action',
       render: (text: any, record: any) => (
-        <span>
+        <span className="action">
           <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
           <a href="javascript:;" onClick={this.showEdit.bind(this, record.id)} >
             <Icon type="edit"/>编辑
@@ -97,6 +108,12 @@ export default class Warning extends React.Component<{}, {}> {
 
   public state: any = {
     selectedRowKeys: []
+  }
+
+  public getAccountt () {
+    const account: any = this.userStore.getAccount()
+    console.log(account.access_token)
+    return account.access_token
   }
 
   public searchData = async () => {
@@ -115,23 +132,28 @@ export default class Warning extends React.Component<{}, {}> {
     }
   }
 
-  public getDetail = async (id: number) => {
-    const res: any = await this.warningService.getDetail({
-      id
+  public newTask = async () => {
+    const res: any = await this.warningService.newTask({
+      'wifiSearchVo': {
+        startImpTime: this.startTime,
+        endImpTime: this.endTime,
+        mac: this.mac,
+        type: this.type,
+      },
+      'ids': this.state.selectedRowKeys
     })
     if (res.status === 0) {
-      console.log(res.data)
+      message.success('新建任务成功')
     }
   }
 
   public delete = async (id: any) => {
-    console.log(id)
-    console.log(JSON.stringify(id))
     const res: any = await this.warningService.deleteC({
-      ids: JSON.stringify(id)
+      ids: id
     })
     if (res.status === 0) {
       message.success('删除成功')
+      this.searchData()
     }
   }
 
@@ -163,11 +185,14 @@ export default class Warning extends React.Component<{}, {}> {
 
   public closeAddModal = () => {
     this.addModal = false
+    this.closeDetail()
+    this.closeEdit()
   }
 
   public showDetail = (id: any) => {
     this.isDetail = true
-    this.getDetail(id)
+    this.addRef.getDetail(id)
+    this.showAddModal()
   }
 
   public closeDetail = () => {
@@ -175,32 +200,64 @@ export default class Warning extends React.Component<{}, {}> {
   }
 
   public showEdit = (id: any) => {
-    this.itemId = id
     this.isEdit = true
     this.addRef.getDetail(id)
-    this.addModal = true
+    this.showAddModal()
   }
 
   public closeEdit = () => {
     this.isEdit = false
-    this.addModal = false
   }
 
   public onRef = (ref: React.Component) => {
     this.addRef = ref
   }
 
+  public showExportModal = () => {
+    this.newTask()
+    this.exportRef.getTaskList()
+    this.exportModal = true
+  }
+
+  public closeExportModal = () => {
+    this.exportModal = false
+  }
+
+  public onExportRef = (ref: React.Component) => {
+    this.exportRef = ref
+  }
+
   constructor (props: any) {
     super(props)
     this.warningService = props.warningService
+    this.taskService = props.taskService
+    this.userStore = props.userStore
     this.pagination = {
-      pageSize: 12,
+      pageSize: 11,
       size: 'middle',
       onChange: this.changePage,
       hideOnSinglePage: true,
       showQuickJumper: true
     }
     this.searchData()
+    this.account = this.getAccountt()
+    this.uploadProps = {
+      action: '/api/control/upload',
+      headers: {
+        authorization: `Bearer ${this.account}`,
+      },
+      name: 'file',
+      data: {
+        upload: 'file'
+      },
+      onChange(info: any) {
+        if (info.file.status === 'done') {
+          message.success('上传成功')
+        } else if (info.file.status === 'error') {
+          message.error('上传失败')
+        }
+      },
+    }
   }
 
   public render () {
@@ -211,8 +268,13 @@ export default class Warning extends React.Component<{}, {}> {
     }
     return (
       <div className="search-main">
+        <ExportExcel
+          visible={this.exportModal}
+          onRef={this.onExportRef}
+          close={this.closeExportModal}/>
         <Add 
           visible={this.addModal}
+          isDetail={this.isDetail}
           isEdit={this.isEdit}
           onRef={this.onRef}
           refresh={this.searchData} 
@@ -220,10 +282,14 @@ export default class Warning extends React.Component<{}, {}> {
         <div className="operate-bar">
           <Row>
           <Col span={2}>
-            <Button size="small" className="export-btn btn" >布控</Button>
+            <div className="btn">
+              <span>布控</span>
+            </div>
           </Col>
           <Col offset={1} span={2}>
-            <Button size="small" className="export-btn btn" >预警</Button>
+            <div className="btn">
+              <span>预警</span>
+            </div>
           </Col>  
           </Row>
         </div>
@@ -259,22 +325,44 @@ export default class Warning extends React.Component<{}, {}> {
                 />
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="search" onClick={this.search} >搜索</Button>
+              <div className="btn" onClick={this.search}>
+                <Icon type="search"></Icon>
+                <span>搜索</span>
+              </div>
             </Col>
             <Col offset={1} span={2}>
-              <Button className="export-btn btn" size="small" icon="plus" onClick={this.showAddModal}>添加布控</Button>
+              <div className="btn" onClick={this.showAddModal}>
+                <Icon type="plus"></Icon>
+                <span>添加布控</span>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="close"  onClick={this.delete.bind(this, this.state.selectedRowKeys)} >删除选中</Button>
+              <div className="btn" onClick={this.delete.bind(this, this.state.selectedRowKeys)}>
+                <Icon type="close"></Icon>
+                <span>删除选中</span>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="download" >导入Excel</Button>
+              <div className="btn">
+              <Upload {...this.uploadProps}>
+                <Icon type="download"></Icon>
+                <span>导入Excel</span>
+              </Upload>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="upload" >导出</Button>
+              <div className="btn" onClick={this.showExportModal}>
+                <Icon type="upload"></Icon>
+                <span>导出</span>
+              </div>
             </Col>
             <Col span={2}>
-              <Button className="export-btn btn" size="small" icon="download" >下载模板</Button>
+              <div className="btn">
+                <a href="/api/task/export">
+                  <Icon type="download"></Icon>
+                  <span>下载模板</span>
+                </a>
+              </div>
             </Col>
           </Row>
         </div>

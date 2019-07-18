@@ -8,6 +8,7 @@ import { WarningService } from 'src/services/warning'
 export interface Addprops {
   visible: boolean
   isEdit: boolean
+  isDetail: boolean
   onRef: (ref: React.Component) => void
   close: () => void
   refresh: () => void
@@ -22,7 +23,6 @@ interface DataProp {
 }
 
 class ModalProps {
-  public className: string = 'add-modal'
   public centered: boolean = true
   public cancelText: string = '取消'
   public okText: string = '确定'
@@ -74,11 +74,33 @@ export default class Add extends React.Component<Addprops, {}> {
         controller_name: res.data.controller_name,
         mac: res.data.mac
       }
-      this.title = '编辑布控'
+      if (this.props.isDetail) {
+        this.title = '布控详情'
+      }
+      if (this.props.isEdit) {
+        this.title = '编辑布控'
+      }
+      
     }
   }
 
   public ok = async () => {
+    if (!this.data.police_name) {
+      message.error('责任民警不能为空')
+      return
+    }
+    if (!this.data.police_id) {
+      message.error('警号不能为空')
+      return
+    }
+    if (!this.data.controller_name) {
+      message.error('管控人不能为空')
+      return
+    }
+    if (!this.data.mac) {
+      message.error('布控Mac不能为空')
+      return
+    }
     if (this.data.id) {
       console.log(this.data)
       const res: any = await this.warningService.edit(this.data)
@@ -89,22 +111,6 @@ export default class Add extends React.Component<Addprops, {}> {
         this.props.close()
       }
     } else {
-      if (!this.data.police_name) {
-        message.error('责任民警不能为空')
-        return
-      }
-      if (!this.data.police_id) {
-        message.error('警号不能为空')
-        return
-      }
-      if (!this.data.controller_name) {
-        message.error('管控人不能为空')
-        return
-      }
-      if (!this.data.mac) {
-        message.error('布控Mac不能为空')
-        return
-      }
       const res: any = await this.warningService.add(this.data)
       if (res.status === 0) {
         message.success('添加成功')
@@ -128,12 +134,14 @@ export default class Add extends React.Component<Addprops, {}> {
   }
 
   public render () {
+    const { isDetail } = this.props
     return (
-      <Modal {...this.modalProps} title={this.title}>
+      <Modal {...this.modalProps} title={this.title} className={isDetail ? 'detail-modal add-modal' : 'add-modal'} >
         <div className="form-input">
           <label>责任民警</label>
           <Input
             placeholder="请填写责任民警（必填）"
+            disabled={isDetail}
             value={this.data.police_name}
             onChange={e => {this.data.police_name = e.target.value}}
           />
@@ -142,6 +150,7 @@ export default class Add extends React.Component<Addprops, {}> {
           <label>警号</label>
           <Input
             placeholder="请填写警号（必填）"
+            disabled={isDetail}
             value={this.data.police_id}
             onChange={e => {this.data.police_id = e.target.value}}
           />
@@ -150,6 +159,7 @@ export default class Add extends React.Component<Addprops, {}> {
           <label>管控人</label>
           <Input
             placeholder="请填写管控人（必填）"
+            disabled={isDetail}
             value={this.data.controller_name}
             onChange={e => {this.data.controller_name = e.target.value}}
           />
@@ -158,6 +168,7 @@ export default class Add extends React.Component<Addprops, {}> {
           <label>布控Mac</label>
           <Input
             placeholder="请填写布控Mac（必填）"
+            disabled={isDetail}
             value={this.data.mac}
             onChange={e => {this.data.mac = e.target.value}}
           />

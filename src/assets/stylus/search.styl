@@ -4,28 +4,46 @@
 
   .operate-bar
     width: 100%;
-    height: 36px;
-    line-height: 36px;
-    padding: 5px 8px;
+    height: .6rem;
+    line-height: .6rem;
+    padding: 0 8px;
+
+    .ant-row
+      display: flex;
+      align-items: center;
 
     .range
-      width: 200px;
-      height: 28px;        
+      width: 2.9rem;
+      height: .4rem;        
       margin-left: 5px;
 
     .device-input
       margin-left: 5px;
-      width: 100px;
+      width: 1.4rem;
 
-    .export-btn
-      background-color: #0b548a;
+    .btn
+      bg('list-button-normal.png')
       color: rgba(255, 255, 255, .8);
-      border: 0;
+      width: 1.4rem;
+      height: .5rem;
+      line-height: .5rem;
+      text-align: center;
       font-size: .1rem;
+      cursor: pointer
+
+      .ant-upload
+        color: rgba(255, 255, 255, .8);
+        font-size: .1rem;
+
+      .a
+        color: rgba(255, 255, 255, .8);
+
+      .anticon
+        margin-right: .1rem; 
 
   .search-wrapper
     width: 100%;
-    max-height: calc(100% - 36px);
+    max-height: calc(100% - .5rem);
     padding: 2% 1%;
 
     

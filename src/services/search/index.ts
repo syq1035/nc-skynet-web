@@ -7,14 +7,13 @@ export class SearchService extends Service {
     super(path)
   }
 
-  @action public async exportExcel (data: any = {}): Promise<any> {
-    return this.post('/export', data)
+  @action public async newTask (data: any = {}): Promise<any> {
+    return this.post('/new_task', data)
   }
-
+  
   @action public async getList (data: any = {}): Promise<any> {
     return this.get('/list', data)
   }
-  
 }
 
 export default new SearchService()

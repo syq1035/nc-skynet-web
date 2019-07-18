@@ -1,10 +1,11 @@
-import { DatePicker, Input, Button, Row, Col, Table, message } from 'antd';
+import { DatePicker, Input, Row, Col, Table, message, Icon } from 'antd';
 import { observable } from 'mobx'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
 import { UserStore } from 'src/stores/modules/user'
 import { RouteComponentProps } from 'react-router';
 import { SearchService } from 'src/services/search'
+import ExportExcel from 'src/modals/export_excel'
 
 const { RangePicker } = DatePicker;
 @inject('searchService')
@@ -12,7 +13,9 @@ const { RangePicker } = DatePicker;
 export default class Home extends React.Component<RouteComponentProps, {}> {
   public userStore: UserStore
   public searchService: SearchService
+  public exportRef: any
   
+  @observable public exportModal: boolean = false
   @observable public tableData: any[]
   @observable public page: number = 1
   @observable public total: number
@@ -96,29 +99,19 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     }
   }
 
-  public export = async () => {
-    const res: any = await this.searchService.exportExcel({
+  public newTask = async () => {
+    const res: any = await this.searchService.newTask({
       'wifiSearchVo': {
-        'startImpTime': '2019-07-09',
-        'endImpTime': '2019-07-11',
-        'bts': '11133WIFI'
+        startImpTime: this.startImpTime,
+        endImpTime: this.endImpTime,
+        bts: this.bts
       },
-      'ids': ['11133', '1562840086575', '1562838754864', '1562838622519', '1562838623927']
+      'ids': this.state.selectedRowKeys
     })
     if (res.status === 0) {
-      message.success('导出成功')
-    } else {
-      message.error(res.msg || '导出失败')
+      message.success('新建任务成功')
+      console.log('新建任务')
     }
-  }
-
-  public search = () => {
-    this.searchData()
-    this.startImpTime = ''
-    this.endImpTime = ''
-    this.startCollectTime = ''
-    this.endCollectTime = ''
-    this.bts = ''
   }
 
   public onSelectChange = (selectedRowKeys: any) => {
@@ -138,6 +131,20 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   public changeImpTime = (date: any, dateString: any) => {
     this.startImpTime = dateString[0]
     this.endImpTime = dateString[1]
+  }
+
+  public showExportModal = () => {
+    this.newTask()
+    this.exportRef.getTaskList()
+    this.exportModal = true
+  }
+
+  public closeExportModal = () => {
+    this.exportModal = false
+  }
+
+  public onRef = (ref: React.Component) => {
+    this.exportRef = ref
   }
 
   constructor (props: any) {
@@ -162,6 +169,10 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     }
     return (
       <div className="search-main">
+        <ExportExcel
+          visible={this.exportModal}
+          onRef={this.onRef}
+          close={this.closeExportModal}/>
         <div className="operate-bar">
           <Row>
             <Col span={5}>
@@ -193,10 +204,16 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                />
             </Col>
             <Col span={2}>
-              <Button size="small" className="export-btn" icon="search" onClick={this.search}>搜索</Button>
+              <div className="btn" onClick={this.searchData}>
+                <Icon type="search"></Icon>
+                <span>搜索</span>
+              </div>
             </Col>
             <Col offset={6} span={3}>
-              <Button className="export-btn" size="small" icon="search" onClick={this.export}>导出为Excel</Button>
+            <div className="btn" onClick={this.showExportModal}>
+                <Icon type="search"></Icon>
+                <span>导出Excel</span>
+              </div>
             </Col>
           </Row>
         </div>

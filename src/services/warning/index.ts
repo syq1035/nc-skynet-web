@@ -20,11 +20,19 @@ export class WarningService extends Service {
   }
 
   @action public async deleteC (data: any = {}): Promise<any> {
-    return this.delete('/del', data)
+    return this.post('/del', data)
   }
 
   @action public async getDetail (data: any = {}): Promise<any> {
     return this.get('/detail', data)
+  }
+
+  @action public async newTask (data: any = {}): Promise<any> {
+    return this.post('/new_task', data)
+  }
+
+  @action public async upload (data: any = {}): Promise<any> {
+    return this.post('/upload', data)
   }
 }
 
