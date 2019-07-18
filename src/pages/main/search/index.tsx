@@ -195,13 +195,13 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
             <Col span={2}>
               <div className="btn" onClick={this.search}>
                 <Icon type="search"></Icon>
-                <i>搜索</i>
+                <span>搜索</span>
               </div>
             </Col>
             <Col offset={6} span={3}>
             <div className="btn" onClick={this.export}>
                 <Icon type="search"></Icon>
-                <i>导出为Excel</i>
+                <span>导出为Excel</span>
               </div>
             </Col>
           </Row>

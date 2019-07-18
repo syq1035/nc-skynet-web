@@ -163,11 +163,14 @@ export default class Warning extends React.Component<{}, {}> {
 
   public closeAddModal = () => {
     this.addModal = false
+    this.closeDetail()
+    this.closeEdit()
   }
 
   public showDetail = (id: any) => {
     this.isDetail = true
-    this.getDetail(id)
+    this.addRef.getDetail(id)
+    this.showAddModal()
   }
 
   public closeDetail = () => {
@@ -175,15 +178,13 @@ export default class Warning extends React.Component<{}, {}> {
   }
 
   public showEdit = (id: any) => {
-    this.itemId = id
     this.isEdit = true
-    this.addRef.getDetail(id)
-    this.addModal = true
+    this.addRef.getEdit(id)
+    this.showAddModal()
   }
 
   public closeEdit = () => {
     this.isEdit = false
-    this.addModal = false
   }
 
   public onRef = (ref: React.Component) => {
@@ -213,6 +214,7 @@ export default class Warning extends React.Component<{}, {}> {
       <div className="search-main">
         <Add 
           visible={this.addModal}
+          isDetail={this.isDetail}
           isEdit={this.isEdit}
           onRef={this.onRef}
           refresh={this.searchData} 
@@ -221,12 +223,12 @@ export default class Warning extends React.Component<{}, {}> {
           <Row>
           <Col span={2}>
             <div className="btn">
-              <i>布控</i>
+              <span>布控</span>
             </div>
           </Col>
           <Col offset={1} span={2}>
             <div className="btn">
-              <i>预警</i>
+              <span>预警</span>
             </div>
           </Col>  
           </Row>
@@ -265,37 +267,37 @@ export default class Warning extends React.Component<{}, {}> {
             <Col span={2}>
               <div className="btn" onClick={this.search}>
                 <Icon type="search"></Icon>
-                <i>搜索</i>
+                <span>搜索</span>
               </div>
             </Col>
             <Col offset={1} span={2}>
               <div className="btn" onClick={this.showAddModal}>
                 <Icon type="plus"></Icon>
-                <i>添加布控</i>
+                <span>添加布控</span>
               </div>
             </Col>
             <Col span={2}>
               <div className="btn" onClick={this.delete.bind(this, this.state.selectedRowKeys)}>
                 <Icon type="close"></Icon>
-                <i>删除选中</i>
+                <span>删除选中</span>
               </div>
             </Col>
             <Col span={2}>
               <div className="btn">
                 <Icon type="download"></Icon>
-                <i>导入Excel</i>
+                <span>导入Excel</span>
               </div>
             </Col>
             <Col span={2}>
               <div className="btn">
                 <Icon type="upload"></Icon>
-                <i>导出</i>
+                <span>导出</span>
               </div>
             </Col>
             <Col span={2}>
               <div className="btn">
                 <Icon type="download"></Icon>
-                <i>下载模板</i>
+                <span>下载模板</span>
               </div>
             </Col>
           </Row>
