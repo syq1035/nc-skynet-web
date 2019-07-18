@@ -23,7 +23,6 @@ interface DataProp {
 }
 
 class ModalProps {
-  public className: string = 'add-modal'
   public centered: boolean = true
   public cancelText: string = '取消'
   public okText: string = '确定'
@@ -137,7 +136,7 @@ export default class Add extends React.Component<Addprops, {}> {
   public render () {
     const { isDetail } = this.props
     return (
-      <Modal {...this.modalProps} title={this.title}>
+      <Modal {...this.modalProps} title={this.title} className={isDetail ? 'detail-modal add-modal' : 'add-modal'} >
         <div className="form-input">
           <label>责任民警</label>
           <Input
