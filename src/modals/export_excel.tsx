@@ -113,6 +113,7 @@ export default class Add extends React.Component<ExportProps, {}> {
     return (
       <Modal {...this.modalProps}>
         <Table 
+          size="small"
           columns={this.columns} 
           dataSource={this.taskList}
           rowKey="id"
