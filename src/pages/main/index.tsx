@@ -97,7 +97,6 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
           </div>
           <div className="user">
             <Dropdown overlay={menu}
-              trigger={['click']}
               placement="bottomCenter">
               <div className="admin">
                 <div className="avatar">
@@ -139,7 +138,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             </CSSTransition>
           </TransitionGroup>
         </div>
-        <ModifyPassword/>
+        <ModifyPassword a={1}/>
       </div>
     )
   }

@@ -4,9 +4,11 @@ import { inject, observer } from 'mobx-react';
 import { PasswordStore } from 'src/stores/modules/password';
 import { observable } from 'mobx';
 import { UserService } from 'src/services/user'
+import { FormComponentProps } from 'antd/lib/form'
 
-export interface ModifyPasswordProps {
-  form?: any
+export interface ModifyPasswordProps extends FormComponentProps {
+  form: any
+  a: number
 }
 
 class ModalProps {
@@ -19,7 +21,7 @@ class ModalProps {
 
   constructor (onOk: any, onCancel: any) {
     this.onOk = onOk
-    this.onCancel = onCancel
+    this.onCancel = onCancel  
   }
 }
 
@@ -35,6 +37,7 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
 
   constructor (props: any) {
     super(props)
+    console.log('a', props.a)
     this.userService = props.userService
     this.passwordStore = props.passwordStore
     this.modalProps = new ModalProps(this.ok, this.cancel)
@@ -97,7 +100,6 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
               rules: [
                 {
                   required: true,
-                  trigger: 'blur',
                   message: '原始密码不能为空!',
                 }
               ]
@@ -108,7 +110,6 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
               rules: [
                 {
                   required: true,
-                  trigger: 'blur',
                   message: '新密码不能为空!',
                 }
               ]
@@ -133,4 +134,4 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
   }
 }
 
-export default Form.create()(ModifyPassword)
+export default Form.create<ModifyPasswordProps>()(ModifyPassword)
