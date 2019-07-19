@@ -10,6 +10,7 @@ import Home from './home'
 import Search from './search'
 import ImportantArea from './important_area'
 import Warning from './warning'
+import Tasklist from './tasklist'
 import ModifyPassword from './modals/modify_password'
 
 import { UserService } from 'src/services/user'
@@ -94,6 +95,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             <NavLink exact to="/main/search">数据查询</NavLink>
             <NavLink exact to="/main/importantarea">重点区域</NavLink>
             <NavLink exact to="/main/warning">布控预警</NavLink>
+            <NavLink exact to="/main/tasklist">任务列表</NavLink>
           </div>
           <div className="user">
             <div className="avatar">
@@ -130,6 +132,10 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
                   <Route
                     path="/main/warning"
                     component={Warning}
+                  />
+                  <Route
+                    path="/main/tasklist"
+                    component={Tasklist}
                   />
                   <Redirect to="/main/warning" />
                 </Switch>

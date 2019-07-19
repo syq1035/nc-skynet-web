@@ -121,12 +121,12 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
 
   public newTask = async () => {
     const res: any = await this.searchService.newTask({
-      'wifiSearchVo': {
+        startCollectTime: this.startCollectTime,
+        endCollectTime: this.endCollectTime,
         startImpTime: this.startImpTime,
         endImpTime: this.endImpTime,
-        bts: this.bts
-      },
-      'ids': this.state.selectedRowKeys
+        bts: this.bts,
+        ids: this.state.selectedRowKeys
     })
     if (res.status === 0) {
       message.success('新建任务成功')

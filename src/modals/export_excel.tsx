@@ -100,7 +100,7 @@ export default class Add extends React.Component<ExportProps, {}> {
       if (!this.taskList[0].status) {
         this.interval = setInterval(() => {
           this.getTaskList()
-        }, 2000)
+        }, 4000)
       } else {
         clearInterval(this.interval);
       }
