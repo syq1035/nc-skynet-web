@@ -23,6 +23,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   public warningService: WarningService
   public controlService: ControlService
   public taskService: TaskService
+  public tableConfig: any[]
   public addRef: any
   public exportRef: any
   public account: any
@@ -43,134 +44,175 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   @observable public endTime: string = ''
   @observable public uploadProps: any
 
-  public bkColumns: any = [
-    {
-      title: '1/107项',
-      dataIndex: 'id',
-      key: 'id'
-    },
-    {
-      title: '责任民警',
-      dataIndex: 'police_name',
-      key: 'police_name'
-    },
-    {
-      title: '警号',
-      dataIndex: 'police_id',
-      key: 'police_id'
-    },
-    {
-      title: '管控人(姓名/身份证)',
-      key: 'controller',
-      render: (text: any, record: any) => (
-        <span>
-          {record.controller_name}/{record.controller_id}
-        </span>
-      ),
-    },
-    {
-      title: '布控Mac',
-      dataIndex: 'mac',
-      key: 'mac'
-    },
-    {
-      title: '布控状态',
-      dataIndex: 'status',
-      key: 'status'
-    },
-    {
-      title: '坐标',
-      dataIndex: 'zb',
-      key: 'zb'
-    },
-    {
-      title: '布控时间',
-      key: 'create_time',
-      render: (text: any, record: any) => (
-        <span>
-          {utils.momentDate(record.create_time, 'date_time')}
-        </span>
-      ),
-    },
-    {
-      title: '备注',
-      dataIndex: 'remarks',
-      key: 'remarks'
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text: any, record: any) => (
-        <span className="action">
-          <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
-          <a href="javascript:;" onClick={this.showEdit.bind(this, record.id)} >
-            <Icon type="edit"/>编辑
-          </a>
-          <a href="javascript:;" onClick={this.delete.bind(this, [record.id])}>
-            <Icon type="delete"/>删除
-          </a>
-        </span>
-      ),
-    }
-  ]
-
-  public yjColumns: any = [
-    {
-      title: '1/107项',
-      dataIndex: 'id',
-      key: 'id'
-    },
-    {
-      title: '责任民警',
-      dataIndex: 'police_name',
-      key: 'police_name'
-    },
-    {
-      title: '警号',
-      dataIndex: 'police_id',
-      key: 'police_id'
-    },
-    {
-      title: '管控人(姓名/身份证)',
-      key: 'controller',
-      render: (text: any, record: any) => (
-        <span>
-          {record.controller_name}/{record.controller_id}
-        </span>
-      ),
-    },
-    {
-      title: '预警Mac',
-      dataIndex: 'mac',
-      key: 'mac'
-    },
-    {
-      title: '预警状态',
-      dataIndex: 'status',
-      key: 'status'
-    },
-    {
-      title: '预警时间',
-      key: 'warn_time',
-      render: (text: any, record: any) => (
-        <span>
-          {utils.momentDate(record.create_time, 'date_time')}
-        </span>
-      ),
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text: any, record: any) => (
-        <span className="action">
-          <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
-        </span>
-      ),
-    }
-  ]
-
   public state: any = {
     selectedRowKeys: []
+  }
+
+  constructor (props: any) {
+    super(props)
+    this.warningService = props.warningService
+    this.controlService = props.controlService
+    this.taskService = props.taskService
+    this.userStore = props.userStore
+    this.pagination = {
+      pageSize: 11,
+      size: 'middle',
+      onChange: this.changePage,
+      hideOnSinglePage: true,
+      showQuickJumper: true
+    }
+    this.initTable()
+    this.account = this.getAccountt()
+    this.uploadProps = {
+      action: '/api/control/upload',
+      headers: {
+        authorization: `Bearer ${this.account}`,
+      },
+      name: 'file',
+      data: {
+        upload: 'file'
+      },
+      onChange(info: any) {
+        if (info.file.status === 'done') {
+          message.success('上传成功')
+        } else if (info.file.status === 'error') {
+          message.error('上传失败')
+        }
+      },
+    }
+  }
+
+  public initTable = () => {
+    const first: number = (this.page - 1) * this.pagination.pageSize + 1
+    const last: number = this.page * this.pagination.pageSize
+    if (this.isControl) {
+      this.tableConfig = [
+        {
+          title: `${first}/${last}项`,
+          dataIndex: 'id',
+          key: 'id'
+        },
+        {
+          title: '责任民警',
+          dataIndex: 'police_name',
+          key: 'police_name'
+        },
+        {
+          title: '警号',
+          dataIndex: 'police_id',
+          key: 'police_id'
+        },
+        {
+          title: '管控人(姓名/身份证)',
+          key: 'controller',
+          render: (text: any, record: any) => (
+            <span>
+              {record.controller_name}/{record.controller_id}
+            </span>
+          ),
+        },
+        {
+          title: '布控Mac',
+          dataIndex: 'mac',
+          key: 'mac'
+        },
+        {
+          title: '布控状态',
+          dataIndex: 'status',
+          key: 'status'
+        },
+        {
+          title: '坐标',
+          dataIndex: 'zb',
+          key: 'zb'
+        },
+        {
+          title: '布控时间',
+          key: 'create_time',
+          render: (text: any, record: any) => (
+            <span>
+              {utils.momentDate(record.create_time, 'date_time')}
+            </span>
+          ),
+        },
+        {
+          title: '备注',
+          dataIndex: 'remarks',
+          key: 'remarks'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          render: (text: any, record: any) => (
+            <span className="action">
+              <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
+              <a href="javascript:;" onClick={this.showEdit.bind(this, record.id)} >
+                <Icon type="edit"/>编辑
+              </a>
+              <a href="javascript:;" onClick={this.delete.bind(this, [record.id])}>
+                <Icon type="delete"/>删除
+              </a>
+            </span>
+          ),
+        }
+      ]
+    } else {
+      this.tableConfig = [
+        {
+          title: `${first}/${last}项`,
+          dataIndex: 'id',
+          key: 'id'
+        },
+        {
+          title: '责任民警',
+          dataIndex: 'police_name',
+          key: 'police_name'
+        },
+        {
+          title: '警号',
+          dataIndex: 'police_id',
+          key: 'police_id'
+        },
+        {
+          title: '管控人(姓名/身份证)',
+          key: 'controller',
+          render: (text: any, record: any) => (
+            <span>
+              {record.controller_name}/{record.controller_id}
+            </span>
+          ),
+        },
+        {
+          title: '预警Mac',
+          dataIndex: 'mac',
+          key: 'mac'
+        },
+        {
+          title: '预警状态',
+          dataIndex: 'status',
+          key: 'status'
+        },
+        {
+          title: '预警时间',
+          key: 'warn_time',
+          render: (text: any, record: any) => (
+            <span>
+              {utils.momentDate(record.warn_time, 'date_time')}
+            </span>
+          ),
+        },
+        {
+          title: '操作',
+          key: 'action',
+          render: (text: any, record: any) => (
+            <span className="action">
+              <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
+            </span>
+          ),
+        }
+      ]
+    }
+    this.searchData()
   }
 
   public getAccountt () {
@@ -199,8 +241,8 @@ export default class Warning extends React.Component<WarningPorps, {}> {
         page_size: this.pagination.pageSize,
         type: this.type,
         mac: this.mac,
-        startTime: this.startTime,
-        endTime: this.endTime,
+        startWarnTime: this.startTime,
+        endWarnTime: this.endTime,
       })
       if (res.status === 0) {
         this.tableData = res.data.list
@@ -258,7 +300,8 @@ export default class Warning extends React.Component<WarningPorps, {}> {
     } else {
       this.isControl = false
     }
-    this.searchData()
+    this.page = 1
+    this.initTable()
   }
 
   public onSelectChange: any = (selectedRowKeys: any) => {
@@ -267,7 +310,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   
   public changePage = (page: number) => {
     this.page = page
-    this.searchData()
+    this.initTable()
   }
 
   public changeTime = (date: any, dateString: any) => {
@@ -320,40 +363,6 @@ export default class Warning extends React.Component<WarningPorps, {}> {
 
   public onExportRef = (ref: React.Component) => {
     this.exportRef = ref
-  }
-
-  constructor (props: any) {
-    super(props)
-    this.warningService = props.warningService
-    this.controlService = props.controlService
-    this.taskService = props.taskService
-    this.userStore = props.userStore
-    this.pagination = {
-      pageSize: 11,
-      size: 'middle',
-      onChange: this.changePage,
-      hideOnSinglePage: true,
-      showQuickJumper: true
-    }
-    this.searchData()
-    this.account = this.getAccountt()
-    this.uploadProps = {
-      action: '/api/control/upload',
-      headers: {
-        authorization: `Bearer ${this.account}`,
-      },
-      name: 'file',
-      data: {
-        upload: 'file'
-      },
-      onChange(info: any) {
-        if (info.file.status === 'done') {
-          message.success('上传成功')
-        } else if (info.file.status === 'error') {
-          message.error('上传失败')
-        }
-      },
-    }
   }
 
   public render () {
@@ -422,7 +431,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
                 />
             </Col>
             <Col span={2}>
-              <div className="btn" onClick={this.searchData}>
+              <div className="btn" onClick={this.initTable}>
                 <Icon type="search"></Icon>
                 <span>搜索</span>
               </div>
@@ -487,7 +496,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
                 total: this.total
               }}
               rowSelection={rowSelection} 
-              columns={this.isControl ? this.bkColumns : this.yjColumns} 
+              columns={this.tableConfig} 
               dataSource={this.tableData} 
             />           
         </div>
