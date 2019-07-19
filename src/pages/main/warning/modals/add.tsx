@@ -3,7 +3,7 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react';
 import { UserStore } from 'src/stores/modules/user';
 import { observable } from 'mobx';
-import { WarningService } from 'src/services/warning'
+import { ControlService } from 'src/services/control'
 
 export interface Addprops {
   visible: boolean
@@ -36,18 +36,18 @@ class ModalProps {
   }
 }
 
-@inject('warningService')
+@inject('controlService')
 @observer
 export default class Add extends React.Component<Addprops, {}> {
 
   @observable public data: DataProp
   @observable public title: string = '添加布控'
   public userStore: UserStore
-  public warningService: WarningService
+  public controlService: ControlService
   public modalProps: any
   constructor (props: any) {
     super(props)
-    this.warningService = props.warningService
+    this.controlService = props.controlService
     this.modalProps = new ModalProps(this.ok, this.cancel)
     this.refresh()
   }
@@ -63,7 +63,7 @@ export default class Add extends React.Component<Addprops, {}> {
   }
 
   public getDetail = async (id: number) => {
-    const res: any = await this.warningService.getDetail({
+    const res: any = await this.controlService.getDetail({
       id
     })
     if (res.status === 0) {
@@ -101,9 +101,8 @@ export default class Add extends React.Component<Addprops, {}> {
       message.error('布控Mac不能为空')
       return
     }
-    if (this.data.id) {
-      console.log(this.data)
-      const res: any = await this.warningService.edit(this.data)
+    if (this.props.isEdit) {
+      const res: any = await this.controlService.edit(this.data)
       if (res.status === 0) {
         message.success('编辑成功')
         this.refresh()
@@ -111,7 +110,7 @@ export default class Add extends React.Component<Addprops, {}> {
         this.props.close()
       }
     } else {
-      const res: any = await this.warningService.add(this.data)
+      const res: any = await this.controlService.add(this.data)
       if (res.status === 0) {
         message.success('添加成功')
         this.refresh()
