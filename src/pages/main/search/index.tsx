@@ -13,6 +13,7 @@ const { RangePicker } = DatePicker;
 export default class Home extends React.Component<RouteComponentProps, {}> {
   public userStore: UserStore
   public searchService: SearchService
+  public tableConfig: any[]
   public exportRef: any
   
   @observable public exportModal: boolean = false
@@ -26,60 +27,79 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   @observable public endCollectTime: any = ''
   @observable public bts: string = ''
 
-  public columns: any = [
-    {
-      title: '1/107项',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: '事件ID',
-      dataIndex: 'adivision',
-      key: 'adivision',
-    },
-    {
-      title: '设备ID',
-      dataIndex: 'bts_id',
-      key: 'bts_id',
-    },
-    {
-      title: '设备名称',
-      dataIndex: 'bts_name',
-      key: 'bts_name',
-    },
-    {
-      title: '前台序列号',
-      dataIndex: 'sn',
-      key: 'sn',
-    },
-    {
-      title: 'MAC',
-      dataIndex: 'mac',
-      key: 'mac',
-    },
-    {
-      title: '坐标',
-      key: 'lat',
-      render: (text: any, record: any) => (
-        <span>
-          {record.lng},{record.lat}
-        </span>
-      ),
-    },
-    {
-      title: '采集时间',
-      dataIndex: 'collect_time',
-      key: 'collect_time',
-    },
-    {
-      title: '入库时间',
-      dataIndex: 'imp_time',
-      key: 'imp_time',
-    }
-  ];
-
   public state: any = {
     selectedRowKeys: []
+  }
+
+  constructor (props: any) {
+    super(props)
+    this.searchService = props.searchService
+
+    this.pagination = {
+      pageSize: 12,
+      size: 'middle',
+      onChange: this.changePage,
+      hideOnSinglePage: true,
+      showQuickJumper: true
+    }
+    this.initTable()
+  }
+
+  public initTable = () => {
+    const first: number = (this.page - 1) * this.pagination.pageSize + 1
+    const last: number = this.page * this.pagination.pageSize
+    this.tableConfig = [
+      {
+        title: `${first}/${last}项`,
+        dataIndex: 'id',
+        key: 'id',
+      },
+      {
+        title: '事件ID',
+        dataIndex: 'adivision',
+        key: 'adivision',
+      },
+      {
+        title: '设备ID',
+        dataIndex: 'bts_id',
+        key: 'bts_id',
+      },
+      {
+        title: '设备名称',
+        dataIndex: 'bts_name',
+        key: 'bts_name',
+      },
+      {
+        title: '前台序列号',
+        dataIndex: 'sn',
+        key: 'sn',
+      },
+      {
+        title: 'MAC',
+        dataIndex: 'mac',
+        key: 'mac',
+      },
+      {
+        title: '坐标',
+        key: 'lat',
+        render: (text: any, record: any) => (
+          <span>
+            {record.lng},{record.lat}
+          </span>
+        ),
+      },
+      {
+        title: '采集时间',
+        dataIndex: 'collect_time',
+        key: 'collect_time',
+      },
+      {
+        title: '入库时间',
+        dataIndex: 'imp_time',
+        key: 'imp_time',
+      }
+    ]
+    this.searchData()
   }
 
   public searchData = async () => {
@@ -101,12 +121,12 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
 
   public newTask = async () => {
     const res: any = await this.searchService.newTask({
-      'wifiSearchVo': {
+        startCollectTime: this.startCollectTime,
+        endCollectTime: this.endCollectTime,
         startImpTime: this.startImpTime,
         endImpTime: this.endImpTime,
-        bts: this.bts
-      },
-      'ids': this.state.selectedRowKeys
+        bts: this.bts,
+        ids: this.state.selectedRowKeys
     })
     if (res.status === 0) {
       message.success('新建任务成功')
@@ -120,7 +140,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   
   public changePage = (page: number) => {
     this.page = page
-    this.searchData()
+    this.initTable()
   }
 
   public changeCellectTime = (date: any, dateString: any) => {
@@ -144,20 +164,6 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
 
   public onRef = (ref: React.Component) => {
     this.exportRef = ref
-  }
-
-  constructor (props: any) {
-    super(props)
-    this.searchService = props.searchService
-
-    this.pagination = {
-      pageSize: 12,
-      size: 'middle',
-      onChange: this.changePage,
-      hideOnSinglePage: true,
-      showQuickJumper: true
-    }
-    this.searchData()
   }
 
   public render () {
@@ -225,7 +231,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                 total: this.total
               }}
               rowSelection={rowSelection} 
-              columns={this.columns} 
+              columns={this.tableConfig} 
               dataSource={this.tableData} 
             />           
         </div>

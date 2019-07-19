@@ -37,6 +37,7 @@ export default class Add extends React.Component<ExportProps, {}> {
   public userStore: UserStore
   public taskService: TaskService
   public modalProps: ModalProps
+  public interval: any
   public columns: any = [
     {
       title: '文件名称',
@@ -45,22 +46,28 @@ export default class Add extends React.Component<ExportProps, {}> {
     },
     {
       title: '文件大小',
-      dataIndex: 'size',
       key: 'size',
+      render: (text: any, record: any) => (
+        <span>{record.status ? record.size + 'KB' : ''}</span>
+      )
     },
     {
-      title: '创建时间',
-      dataIndex: 'create_time',
-      key: 'create_time',
+      title: '导出状态',
+      key: 'status',
+      render: (text: any, record: any) => (
+        <span>{record.status ? '已导出' : record.percent + '%'}</span>
+      )
     },
     {
       title: '操作',
       key: 'action',
       render: (text: any, record: any) => (
         <span>
-          <a href={'/api/task/export?fileName=' + record.name}>
-            <Icon type="cloud-download" />
-          </a>
+          {record.status ?
+            <a href={'/api/task/export?fileName=' + record.name}>
+              <Icon type="cloud-download" />
+            </a> : ''
+          }
         </span>
       ),  
     },
@@ -90,19 +97,33 @@ export default class Add extends React.Component<ExportProps, {}> {
     if (res.status === 0) {
       this.taskList = res.data.list
       this.total = res.data.total
+      // if (!this.taskList[0].status) {
+      this.interval = setInterval(() => {
+        this.getTaskList()
+      }, 4000)
+      // } else {
+        // clearInterval(this.interval);
+      // }
+      
     }
   }
 
   public ok = () => {
     this.props.close()
+    this.page = 1
   }
 
   public cancel = () => {
     this.props.close()
+    this.page = 1
   }
 
   public componentDidMount () {
     this.props.onRef(this)
+  }
+
+  public componentWillUnmount () {
+    clearInterval(this.interval);
   }
 
   public componentWillReceiveProps (props: any) {
