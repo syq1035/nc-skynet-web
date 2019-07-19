@@ -15,8 +15,8 @@ const concat = {
     tooltip: {},
     grid: {
       top: 30,
-      bottom: 25,
-      left: 40,
+      bottom: 35,
+      left: 55,
       right: 10
     },
     xAxis: {
@@ -25,8 +25,8 @@ const concat = {
         show: false
       },
       axisLabel:{
-        rotate:45,//倾斜度 -90 至 90 默认为0
-        margin:12,
+        rotate:30,
+        margin:18,
         align:'center',
         fontSize:10
       },
@@ -68,7 +68,7 @@ const concat = {
       {
         type: 'bar',
         // data: [12.5, 11, 23, 32, 22, 15, 14],
-        barWidth: '30%',
+        barWidth: '40%',
         label: {
           show: false,
           fontSize: 10,
@@ -105,7 +105,7 @@ const concat = {
     grid: {
       top: 30,
       bottom: 25,
-      left: 40,
+      left: 55,
       right: 10
     },
     textStyle: {
@@ -122,13 +122,6 @@ const concat = {
         lineStyle: {
           color: '#0f386e'
         }
-      },
-      axisLabel:{
-        rotate:30,//倾斜度 -90 至 90 默认为0
-        margin:12,
-        align:'center',
-        fontSize:10,
-        // interval:0 //横轴信息全部显示
       },
       splitLine: {
         show: true,
@@ -151,6 +144,13 @@ const concat = {
         lineStyle: {
           color: '#0f386e'
         }
+      },
+      axisLabel:{
+        rotate:30,
+        margin:12,
+        align:'center',
+        fontSize:10,
+        // interval:0 //横轴信息全部显示
       },
       splitLine: {
         show: true,

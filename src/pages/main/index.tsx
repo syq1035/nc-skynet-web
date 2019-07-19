@@ -96,12 +96,15 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             <NavLink exact to="/main/warning">布控预警</NavLink>
           </div>
           <div className="user">
-            <div className="avatar">
-              <Dropdown overlay={menu}
-                placement="bottomCenter">
-                <Icon type="user" />
-              </Dropdown>
-            </div>
+            <Dropdown overlay={menu}
+              trigger={['click']}
+              placement="bottomCenter">
+              <div className="admin">
+                <div className="avatar">
+                    <Icon type="user" />  
+                </div>
+              </div>
+            </Dropdown>
             <div className="user-name">{this.name}</div>
             <div className="logout">
               <Icon type="logout" />
