@@ -97,13 +97,13 @@ export default class Add extends React.Component<ExportProps, {}> {
     if (res.status === 0) {
       this.taskList = res.data.list
       this.total = res.data.total
-      if (!this.taskList[0].status) {
-        this.interval = setInterval(() => {
-          this.getTaskList()
-        }, 4000)
-      } else {
-        clearInterval(this.interval);
-      }
+      // if (!this.taskList[0].status) {
+      this.interval = setInterval(() => {
+        this.getTaskList()
+      }, 4000)
+      // } else {
+        // clearInterval(this.interval);
+      // }
       
     }
   }
