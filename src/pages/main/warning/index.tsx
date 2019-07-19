@@ -4,26 +4,30 @@ import * as React from 'react'
 import { inject, observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
 import { UserStore } from 'src/stores/modules/user'
+import { ControlService } from 'src/services/control'
 import { WarningService } from 'src/services/warning'
 import { TaskService } from 'src/services/task'
 import Add from './modals/add'
 import ExportExcel from 'src/modals/export_excel'
+import utils from 'src/utils/index'
 
 const { RangePicker } = DatePicker;
 interface WarningPorps extends RouteComponentProps {
   userStore: UserStore
 }
-@inject('warningService', 'taskService', 'userStore')
+@inject('warningService', 'controlService', 'taskService', 'userStore')
 @observer
 export default class Warning extends React.Component<WarningPorps, {}> {  
 
   public userStore: UserStore
   public warningService: WarningService
+  public controlService: ControlService
   public taskService: TaskService
   public addRef: any
   public exportRef: any
   public account: any
 
+  @observable public isControl: boolean = true
   @observable public exportModal: boolean = false
   @observable public addModal: boolean = false
   @observable public isDetail: boolean = false
@@ -39,7 +43,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   @observable public endTime: string = ''
   @observable public uploadProps: any
 
-  public columns: any = [
+  public bkColumns: any = [
     {
       title: '1/107项',
       dataIndex: 'id',
@@ -81,8 +85,12 @@ export default class Warning extends React.Component<WarningPorps, {}> {
     },
     {
       title: '布控时间',
-      dataIndex: 'create_time',
-      key: 'create_time'
+      key: 'create_time',
+      render: (text: any, record: any) => (
+        <span>
+          {utils.momentDate(record.create_time, 'date_time')}
+        </span>
+      ),
     },
     {
       title: '备注',
@@ -104,7 +112,62 @@ export default class Warning extends React.Component<WarningPorps, {}> {
         </span>
       ),
     }
-  ];
+  ]
+
+  public yjColumns: any = [
+    {
+      title: '1/107项',
+      dataIndex: 'id',
+      key: 'id'
+    },
+    {
+      title: '责任民警',
+      dataIndex: 'police_name',
+      key: 'police_name'
+    },
+    {
+      title: '警号',
+      dataIndex: 'police_id',
+      key: 'police_id'
+    },
+    {
+      title: '管控人(姓名/身份证)',
+      key: 'controller',
+      render: (text: any, record: any) => (
+        <span>
+          {record.controller_name}/{record.controller_id}
+        </span>
+      ),
+    },
+    {
+      title: '预警Mac',
+      dataIndex: 'mac',
+      key: 'mac'
+    },
+    {
+      title: '预警状态',
+      dataIndex: 'status',
+      key: 'status'
+    },
+    {
+      title: '预警时间',
+      key: 'warn_time',
+      render: (text: any, record: any) => (
+        <span>
+          {utils.momentDate(record.create_time, 'date_time')}
+        </span>
+      ),
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (text: any, record: any) => (
+        <span className="action">
+          <a href="javascript:;" onClick={this.showDetail.bind(this, record.id)}>详情</a>
+        </span>
+      ),
+    }
+  ]
 
   public state: any = {
     selectedRowKeys: []
@@ -112,43 +175,75 @@ export default class Warning extends React.Component<WarningPorps, {}> {
 
   public getAccountt () {
     const account: any = this.userStore.getAccount()
-    console.log(account.access_token)
     return account.access_token
   }
 
   public searchData = async () => {
     this.tableData = []
-    const res: any = await this.warningService.getList({
-      page_no: this.page,
-      page_size: this.pagination.pageSize,
-      type: this.type,
-      mac: this.mac,
-      startTime: this.startTime,
-      endTime: this.endTime,
-    })
-    if (res.status === 0) {
-      this.tableData = res.data.list
-      this.total = res.data.total
-    }
+    if (this.isControl) {
+      const res: any = await this.controlService.getList({
+        page_no: this.page,
+        page_size: this.pagination.pageSize,
+        type: this.type,
+        mac: this.mac,
+        startTime: this.startTime,
+        endTime: this.endTime,
+      })
+      if (res.status === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      }
+    } else {
+      const res: any = await this.warningService.getList({
+        page_no: this.page,
+        page_size: this.pagination.pageSize,
+        type: this.type,
+        mac: this.mac,
+        startTime: this.startTime,
+        endTime: this.endTime,
+      })
+      if (res.status === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      }
+    }    
   }
 
   public newTask = async () => {
-    const res: any = await this.warningService.newTask({
-      'wifiSearchVo': {
-        startImpTime: this.startTime,
-        endImpTime: this.endTime,
-        mac: this.mac,
-        type: this.type,
-      },
-      'ids': this.state.selectedRowKeys
-    })
-    if (res.status === 0) {
-      message.success('新建任务成功')
+    if (this.isControl) {
+      const res: any = await this.controlService.newTask({
+        'wifiSearchVo': {
+          startImpTime: this.startTime,
+          endImpTime: this.endTime,
+          mac: this.mac,
+          type: this.type,
+        },
+        'ids': this.state.selectedRowKeys
+      })
+      if (res.status === 0) {
+        message.success('新建下载任务成功')
+        this.exportRef.getTaskList()
+      }
+    } else {
+      const res: any = await this.warningService.newTask({
+        'wifiSearchVo': {
+          warnStartTime: this.startTime,
+          warnEndTime: this.endTime,
+          mac: this.mac,
+          type: this.type,
+        },
+        'ids': this.state.selectedRowKeys
+      })
+      if (res.status === 0) {
+        message.success('新建下载任务成功')
+        this.exportRef.getTaskList()
+      }
     }
+    
   }
 
   public delete = async (id: any) => {
-    const res: any = await this.warningService.deleteC({
+    const res: any = await this.controlService.deleteC({
       ids: id
     })
     if (res.status === 0) {
@@ -157,12 +252,13 @@ export default class Warning extends React.Component<WarningPorps, {}> {
     }
   }
 
-  public search = () => {
+  public changeType = (type: string) => {
+    if (type === 'bk') {
+      this.isControl = true
+    } else {
+      this.isControl = false
+    }
     this.searchData()
-    this.type = ''
-    this.mac = ''
-    this.startTime = ''
-    this.endTime = ''
   }
 
   public onSelectChange: any = (selectedRowKeys: any) => {
@@ -215,7 +311,6 @@ export default class Warning extends React.Component<WarningPorps, {}> {
 
   public showExportModal = () => {
     this.newTask()
-    this.exportRef.getTaskList()
     this.exportModal = true
   }
 
@@ -230,6 +325,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   constructor (props: any) {
     super(props)
     this.warningService = props.warningService
+    this.controlService = props.controlService
     this.taskService = props.taskService
     this.userStore = props.userStore
     this.pagination = {
@@ -282,12 +378,12 @@ export default class Warning extends React.Component<WarningPorps, {}> {
         <div className="operate-bar">
           <Row>
           <Col span={2}>
-            <div className="btn">
+            <div className={this.isControl ? 'click-btn bar-btn' : 'bar-btn'} onClick={this.changeType.bind(this, 'bk')}>
               <span>布控</span>
             </div>
           </Col>
           <Col offset={1} span={2}>
-            <div className="btn">
+            <div className={this.isControl ? 'bar-btn' : 'click-btn bar-btn'} onClick={this.changeType.bind(this, 'yj')}>
               <span>预警</span>
             </div>
           </Col>  
@@ -296,7 +392,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
         <div className="operate-bar">         
           <Row>
             <Col span={3}>
-              <span>布控类型</span>
+              <span>{this.isControl ? '布控类型' : '预警类型'}</span>
               <Input
                size="small"
                className="device-input" 
@@ -306,17 +402,17 @@ export default class Warning extends React.Component<WarningPorps, {}> {
                />
             </Col>
             <Col span={3}>
-              <span>布控Mac</span>
+              <span>{this.isControl ? '布控Mac' : '预警Mac'}</span>
               <Input
                size="small"
                className="device-input" 
-               placeholder="输入布控Mac" 
+               placeholder="输入Mac" 
                value={this.mac}
                onChange={e => {this.mac = e.target.value}}
                />
             </Col>
             <Col span={5}>
-              <span>布控时间</span>
+              <span>{this.isControl ? '布控时间' : '预警时间'}</span>
               <RangePicker 
                 size="small" 
                 className="range" 
@@ -325,45 +421,60 @@ export default class Warning extends React.Component<WarningPorps, {}> {
                 />
             </Col>
             <Col span={2}>
-              <div className="btn" onClick={this.search}>
+              <div className="btn" onClick={this.searchData}>
                 <Icon type="search"></Icon>
                 <span>搜索</span>
               </div>
             </Col>
-            <Col offset={1} span={2}>
-              <div className="btn" onClick={this.showAddModal}>
-                <Icon type="plus"></Icon>
-                <span>添加布控</span>
-              </div>
-            </Col>
-            <Col span={2}>
-              <div className="btn" onClick={this.delete.bind(this, this.state.selectedRowKeys)}>
-                <Icon type="close"></Icon>
-                <span>删除选中</span>
-              </div>
-            </Col>
-            <Col span={2}>
-              <div className="btn">
-              <Upload {...this.uploadProps}>
-                <Icon type="download"></Icon>
-                <span>导入Excel</span>
-              </Upload>
-              </div>
-            </Col>
-            <Col span={2}>
+            {this.isControl ? 
+              <Col offset={1} span={10}>
+                <Col span={4}>
+                  {this.isControl ? 
+                    <div className="btn" onClick={this.showAddModal}>
+                      <Icon type="plus"></Icon>
+                      <span>添加布控</span>
+                    </div> : ''
+                  }
+                </Col>          
+                <Col offset={1}  span={4}>
+                  {this.isControl ? 
+                    <div className="btn" onClick={this.delete.bind(this, this.state.selectedRowKeys)}>
+                      <Icon type="close"></Icon>
+                      <span>删除选中</span>
+                    </div> : ''
+                  }
+                </Col>
+                <Col offset={1}  span={4}>
+                  <div className="btn">
+                  <Upload {...this.uploadProps}>
+                    <Icon type="download"></Icon>
+                    <span>导入Excel</span>
+                  </Upload>
+                  </div>
+                </Col>
+                <Col offset={1}  span={4}>
+                  <div className="btn" onClick={this.showExportModal}>
+                    <Icon type="upload"></Icon>
+                    <span>导出</span>
+                  </div>
+                </Col>
+                <Col offset={1}  span={4}>
+                  <div className="btn">
+                    <a href="/api/task/export">
+                      <Icon type="download"></Icon>
+                      <span>下载模板</span>
+                    </a>
+                  </div>
+                </Col> 
+              </Col> : 
+              <Col offset={9} span={2}>
               <div className="btn" onClick={this.showExportModal}>
                 <Icon type="upload"></Icon>
                 <span>导出</span>
               </div>
             </Col>
-            <Col span={2}>
-              <div className="btn">
-                <a href="/api/task/export">
-                  <Icon type="download"></Icon>
-                  <span>下载模板</span>
-                </a>
-              </div>
-            </Col>
+            }
+            
           </Row>
         </div>
         <div className="search-wrapper">
@@ -375,7 +486,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
                 total: this.total
               }}
               rowSelection={rowSelection} 
-              columns={this.columns} 
+              columns={this.isControl ? this.bkColumns : this.yjColumns} 
               dataSource={this.tableData} 
             />           
         </div>

@@ -110,6 +110,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     })
     if (res.status === 0) {
       message.success('新建任务成功')
+      this.exportRef.getTaskList()
     }
   }
 
@@ -134,7 +135,6 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
 
   public showExportModal = () => {
     this.newTask()
-    this.exportRef.getTaskList()
     this.exportModal = true
   }
 
