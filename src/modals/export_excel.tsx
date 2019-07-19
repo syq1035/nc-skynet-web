@@ -63,9 +63,11 @@ export default class Add extends React.Component<ExportProps, {}> {
       key: 'action',
       render: (text: any, record: any) => (
         <span>
-          <a href={'/api/task/export?fileName=' + record.name}>
-            <Icon type="cloud-download" />
-          </a>
+          {record.status ?
+            <a href={'/api/task/export?fileName=' + record.name}>
+              <Icon type="cloud-download" />
+            </a> : ''
+          }
         </span>
       ),  
     },
