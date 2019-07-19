@@ -97,7 +97,6 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
         i++
       }
     }
-    console.log('XData', XData)
     return {XData, SData}
   }
   public drawEcharts (XData: any, SData: any) {
