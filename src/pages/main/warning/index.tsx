@@ -372,6 +372,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
           visible={this.addModal}
           isDetail={this.isDetail}
           isEdit={this.isEdit}
+          isControl={this.isControl}
           onRef={this.onRef}
           refresh={this.searchData} 
           close={this.closeAddModal}/>
