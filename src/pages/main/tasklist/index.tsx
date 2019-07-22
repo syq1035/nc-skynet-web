@@ -34,7 +34,7 @@ export default class Add extends React.Component<RouteComponentProps, {}> {
       title: '导出状态',
       key: 'status',
       render: (text: any, record: any) => (
-        <span>{record.status ? '已导出' : record.percent + '%'}</span>
+        <span>{ this.handleStatus(record.status, record.pecent)}</span>
       )
     },
     {
@@ -42,7 +42,7 @@ export default class Add extends React.Component<RouteComponentProps, {}> {
       key: 'action',
       render: (text: any, record: any) => (
         <span>
-          {record.status ?
+          {record.status === 1 ?
             <a href={'/api/task/export?fileName=' + record.name}>
               <Icon type="cloud-download" />
             </a> : ''
@@ -76,16 +76,25 @@ export default class Add extends React.Component<RouteComponentProps, {}> {
     if (res.status === 0) {
       this.taskList = res.data.list
       this.total = res.data.total
-      // if (!this.taskList[0].status) {
-      this.interval = setInterval(() => {
-        this.getTaskList()
-      }, 6000)
-      // } else {
-        // clearInterval(this.interval);
-      // }
-      
     }
   }
+
+  public handleStatus (status: number, pecent: number): any {
+    if (status === 1) {
+      return '已导出'
+    }
+    if (status === -1) {
+      return '导出失败'
+    }
+    if (status === 0) {
+      return pecent + '%'
+    }
+  }
+
+  public componentDidMount() {
+    this.interval = setInterval(this.getTaskList, 5000);
+  }
+
   public componentWillUnmount () {
     clearInterval(this.interval);
   }
@@ -93,6 +102,7 @@ export default class Add extends React.Component<RouteComponentProps, {}> {
   public render () {
     return (
         <Table 
+          className="tasklist"
           size="small"
           columns={this.columns} 
           dataSource={this.taskList}
