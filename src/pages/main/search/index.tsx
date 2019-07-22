@@ -27,6 +27,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   @observable public startCollectTime: any = ''
   @observable public endCollectTime: any = ''
   @observable public bts: string = ''
+  @observable public address: string = ''
 
   public state: any = {
     selectedRowKeys: []
@@ -112,7 +113,8 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
       endImpTime: this.endImpTime,
       startCollectTime: this.startCollectTime,
       endCollectTime: this.endCollectTime,
-      bts: this.bts
+      bts: this.bts,
+      addr: this.address
     })
     if (res.status === 0) {
       this.tableData = res.data.list
@@ -190,6 +192,26 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
           close={this.closeExportModal}/>
         <div className="operate-bar">
           <Row>
+            <Col span={3}>
+              <span>设备名称</span>
+              <Input
+               size="small"
+               className="device-input" 
+               placeholder="输入ID域名称" 
+               value={this.bts}
+               onChange={e => { this.bts = e.target.value }}
+               />
+            </Col>
+            <Col span={3}>
+              <span>设备地址</span>
+              <Input
+               size="small"
+               className="device-input" 
+               placeholder="输入设备地址" 
+               value={this.address}
+               onChange={e => { this.address = e.target.value }}
+               />
+            </Col>
             <Col span={5}>
               <span>采集时间</span>
               <RangePicker 
@@ -208,23 +230,13 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
                 onChange={this.changeImpTime}
                 />
             </Col>
-            <Col span={3}>
-              <span>设备</span>
-              <Input
-               size="small"
-               className="device-input" 
-               placeholder="输入ID域名称" 
-               value={this.bts}
-               onChange={e => { this.bts = e.target.value }}
-               />
-            </Col>
             <Col span={2}>
               <div className="btn" onClick={this.searchData}>
                 <Icon type="search"></Icon>
                 <span>搜索</span>
               </div>
             </Col>
-            <Col offset={6} span={3}>
+            <Col offset={4} span={2}>
             <div className="btn" onClick={this.showExportModal}>
                 <Icon type="search"></Icon>
                 <span>导出Excel</span>
