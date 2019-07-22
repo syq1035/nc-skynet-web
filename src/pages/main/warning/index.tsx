@@ -27,6 +27,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   public addRef: any
   public exportRef: any
   public account: any
+  public interval: any
 
   @observable public isControl: boolean = true
   @observable public exportModal: boolean = false
@@ -355,14 +356,20 @@ export default class Warning extends React.Component<WarningPorps, {}> {
   public showExportModal = () => {
     this.newTask()
     this.exportModal = true
+    this.interval = setInterval(this.exportRef.getTaskList, 3000);
   }
 
   public closeExportModal = () => {
     this.exportModal = false
+    clearInterval(this.interval);
   }
 
   public onExportRef = (ref: React.Component) => {
     this.exportRef = ref
+  }
+
+  public componentWillUnmount () {
+    clearInterval(this.interval);
   }
 
   public render () {
@@ -385,7 +392,7 @@ export default class Warning extends React.Component<WarningPorps, {}> {
           onRef={this.onRef}
           refresh={this.searchData} 
           close={this.closeAddModal}/>
-        <div className="operate-bar">
+        <div className="operate-btn">
           <Row>
           <Col span={2}>
             <div className={this.isControl ? 'click-btn bar-btn' : 'bar-btn'} onClick={this.changeType.bind(this, 'bk')}>

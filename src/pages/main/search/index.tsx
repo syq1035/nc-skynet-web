@@ -15,6 +15,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   public searchService: SearchService
   public tableConfig: any[]
   public exportRef: any
+  public interval: any
   
   @observable public exportModal: boolean = false
   @observable public tableData: any[]
@@ -130,8 +131,11 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
     })
     if (res.status === 0) {
       message.success('新建任务成功')
-      this.exportRef.getTaskList()
     }
+    if (res.status === 1001) {
+      message.success(res.mes)
+    }
+    this.exportRef.getTaskList()
   }
 
   public onSelectChange = (selectedRowKeys: any) => {
@@ -156,14 +160,20 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
   public showExportModal = () => {
     this.newTask()
     this.exportModal = true
+    this.interval = setInterval(this.exportRef.getTaskList, 3000);
   }
 
   public closeExportModal = () => {
     this.exportModal = false
+    clearInterval(this.interval);
   }
 
   public onRef = (ref: React.Component) => {
     this.exportRef = ref
+  }
+
+  public componentWillUnmount () {
+    clearInterval(this.interval);
   }
 
   public render () {
