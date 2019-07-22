@@ -15,15 +15,13 @@ import ModifyPassword from './modals/modify_password'
 
 import { UserService } from 'src/services/user'
 import { UserStore } from 'src/stores/modules/user'
-import { PasswordStore } from 'src/stores/modules/password'
 
-@inject('userService', 'userStore', 'passwordStore')
+@inject('userService', 'userStore')
 @observer
 class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public userService: UserService
   public userStore: UserStore
-  public passwordStore: PasswordStore
 
   @observable public menuList: any[] = []
   @observable public selectItem: string[]
@@ -40,20 +38,15 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
   public initConfig (props: any): void {
     this.userService = props.userService
     this.userStore = props.userStore
-    this.passwordStore = props.passwordStore
-  }
-
-  public chooseMenu = async (item: any) => {
-    //
   }
 
   public closeModifyPasswordModal = () => {
-    this.passwordStore.closeModal()
+    this.modifyPasswordModal = false
     
   }
 
   public showModifyPasswordModal = () => {
-    this.passwordStore.showModal()
+    this.modifyPasswordModal = true
   }
 
   public async getProfile () {
@@ -98,14 +91,16 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             <NavLink exact to="/main/tasklist">任务列表</NavLink>
           </div>
           <div className="user">
-            <div className="avatar">
-              <Dropdown overlay={menu}
-                placement="bottomCenter">
-                <Icon type="user" />
-              </Dropdown>
-            </div>
+            <Dropdown overlay={menu}
+              placement="bottomCenter">
+              <div className="admin">
+                <div className="avatar">
+                    <Icon type="user" />  
+                </div>
+              </div>
+            </Dropdown>
             <div className="user-name">{this.name}</div>
-            <div className="logout">
+            <div className="logout" onClick={this.sigout}>
               <Icon type="logout" />
             </div>
           </div>
@@ -142,7 +137,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
             </CSSTransition>
           </TransitionGroup>
         </div>
-        <ModifyPassword/>
+        <ModifyPassword visible={this.modifyPasswordModal} close={this.closeModifyPasswordModal}/>
       </div>
     )
   }

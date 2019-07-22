@@ -1,12 +1,14 @@
-import { Modal, Input, message, Form } from 'antd'
+import { Modal, Input, Form } from 'antd'
 import * as React from 'react'
 import { inject, observer } from 'mobx-react';
-import { PasswordStore } from 'src/stores/modules/password';
 import { observable } from 'mobx';
 import { UserService } from 'src/services/user'
+import { FormComponentProps } from 'antd/lib/form'
 
-export interface ModifyPasswordProps {
-  form?: any
+export interface ModifyPasswordProps extends FormComponentProps {
+  form: any
+  visible: boolean
+  close: () => void
 }
 
 class ModalProps {
@@ -14,29 +16,27 @@ class ModalProps {
   public centered: boolean = true
   public cancelText: string = '取消'
   public okText: string = '确定'
+  public visible: boolean = false
   public onOk: any
   public onCancel: any
 
   constructor (onOk: any, onCancel: any) {
     this.onOk = onOk
-    this.onCancel = onCancel
+    this.onCancel = onCancel  
   }
 }
 
-@inject('userService', 'passwordStore')
+@inject('userService')
 @observer
 class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
 
   @observable public title: string = '修改密码'
-  public passwordStore: PasswordStore
   public userService: UserService
   public modalProps: any
-  public visible: boolean = false
 
   constructor (props: any) {
     super(props)
     this.userService = props.userService
-    this.passwordStore = props.passwordStore
     this.modalProps = new ModalProps(this.ok, this.cancel)
     this.refresh()
   }
@@ -60,13 +60,12 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
     }
     const res: any = await this.userService.changepwd(params)
     if (res.status === 0) {
-      message.success('修改成功')
-      this.passwordStore.closeModal()
+      this.props.close()
     }  
   }
   public cancel = () => {
     this.refresh()
-    this.passwordStore.closeModal()
+    this.props.close()
   }
   public compareToFirstPassword = (rule: any, value: any, callback: any) => {
     const { form } = this.props;
@@ -76,7 +75,9 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
       callback();
     }
   }
-
+  public componentWillReceiveProps (props: any) {
+    this.modalProps.visible = props.visible
+  }
   public render () {
     const formItemLayout = {
       labelCol: {
@@ -90,14 +91,13 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
     };
     const { getFieldDecorator } = this.props.form
     return (
-      <Modal {...this.modalProps} visible={this.passwordStore.getModalVisible} title={this.title}>
+      <Modal {...this.modalProps} title={this.title}>
         <Form {...formItemLayout}>
           <Form.Item label="原始密码" hasFeedback>
             {getFieldDecorator('old_pwd', {
               rules: [
                 {
                   required: true,
-                  trigger: 'blur',
                   message: '原始密码不能为空!',
                 }
               ]
@@ -108,7 +108,6 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
               rules: [
                 {
                   required: true,
-                  trigger: 'blur',
                   message: '新密码不能为空!',
                 }
               ]
@@ -133,4 +132,4 @@ class ModifyPassword extends React.Component<ModifyPasswordProps, {}> {
   }
 }
 
-export default Form.create()(ModifyPassword)
+export default Form.create<ModifyPasswordProps>()(ModifyPassword)

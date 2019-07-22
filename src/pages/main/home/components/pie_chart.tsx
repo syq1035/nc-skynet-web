@@ -36,22 +36,10 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
     this.echarts = props.echarts
     this.type = props.type
     this.chartRef = React.createRef()
-    if (this.type === 'range') {
-      this.endMoment = moment()
-      this.initStartMoment()
-      this.startFormat = this.startMoment.format('YYYY/MM/DD HH')
-      this.endFormat = this.endMoment.format('YYYY/MM/DD HH')
-    } 
-  }
-  public initStartMoment () {
-    if (this.type === 'month') {
-      this.startMoment = moment().startOf('month')
-    } else if (this.type === 'week') {
-      this.startMoment = moment().startOf('isoWeek')
-    } else {
-      this.startMoment = moment().startOf('day')
-    }
-    
+    this.endMoment = moment()
+    this.startMoment = moment().startOf('day')
+    this.startFormat = this.startMoment.format('YYYY/MM/DD HH')
+    this.endFormat = this.endMoment.format('YYYY/MM/DD HH')
   }
   public componentDidMount () {
     if (this.type === 'range') {

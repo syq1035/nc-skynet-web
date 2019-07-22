@@ -89,7 +89,7 @@ export default class LineBarChart extends React.Component<LineBarChartProps, {}>
     if (this.XData.length > len) {
       XData = []
       SData = []
-      const range: any = (this.XData.length / len).toFixed()
+      const range: any = Math.floor(this.XData.length / len)
       let i: number = 0
       while (i < len) {
         XData.push(this.XData[i * range])

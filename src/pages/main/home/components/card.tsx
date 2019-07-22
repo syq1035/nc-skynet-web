@@ -4,16 +4,16 @@ import { inject, observer } from 'mobx-react';
 interface CardProps {
   title: string,
   value: number,
-  lastValue: number
+  lastValue: number,
 }
 
 @inject()
 @observer
-export default class Card extends React.Component<CardProps, {}> {  
+class Card extends React.Component<CardProps, {}> {  
 
   constructor (props: any) {
     super(props)
-
+    console.log(props)
   }
   get rate () {
     const {value, lastValue} = this.props
@@ -29,6 +29,7 @@ export default class Card extends React.Component<CardProps, {}> {
     }
     return 'up'
   } 
+
   public render () {
     const {title, value} = this.props
     return (
@@ -46,3 +47,5 @@ export default class Card extends React.Component<CardProps, {}> {
     )
   }
 }
+
+export default Card

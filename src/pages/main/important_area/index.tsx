@@ -43,8 +43,8 @@ export default class ImportantArea extends React.Component<RouteComponentProps, 
     gis.setCenter(type)
   }
   public initMap() {
-    gis.wh_gis_init(this.type, this.mapRef.current)
-    // gis.h_wh_gis_init(this.type, this.mapRef.current)
+    // gis.gis_init(this.type, this.mapRef.current)
+    gis.h_gis_init(this.type, this.mapRef.current)
   }
   public getMapData(type: string = '') {
     this.drawHeatMap(type)
@@ -52,8 +52,8 @@ export default class ImportantArea extends React.Component<RouteComponentProps, 
   }
   public drawHeatMap(type: string = '') {
     if (type === 'update') {
-      gis.removeMapvLayer()
-      // gis.hRemoveMapvLayer()
+      // gis.removeMapvLayer()
+      gis.hRemoveMapvLayer()
     }
     this.homeService
       .getCoord({
@@ -62,8 +62,8 @@ export default class ImportantArea extends React.Component<RouteComponentProps, 
       })
       .then((res: any) => {
         if (res.status === 0) {
-          gis.drawHeatMap(res.data)
-          // gis.hDrawHeatMap(res.data)
+          // gis.drawHeatMap(res.data)
+          gis.hDrawHeatMap(res.data)
         }
       });
   }

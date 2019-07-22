@@ -44,7 +44,7 @@ class Login extends React.Component<LoginProps, {}> {
         if (res.status === 0) {
           // message.success('登录成功')
           this.userStore.saveLoginData(res.data)
-          this.props.history.replace('/main/home')
+          this.props.history.push('/main/home')
         } else {
           message.error(res.msg || '登录失败')
         }
@@ -101,7 +101,7 @@ class Login extends React.Component<LoginProps, {}> {
                     valuePropName: 'checked',
                     initialValue: true
                   })(
-                  <Checkbox checked={true}>记住密码</Checkbox>)
+                  <Checkbox>记住密码</Checkbox>)
                 }
               </div>
               <div className="sub-box">

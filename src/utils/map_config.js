@@ -11,7 +11,7 @@ const gis = {
   geojson:null,
   mapv:null,
   mapvLayer:null,
-  wh_gis_init(type, el){
+  gis_init(type, el){
     const crs = new L.Proj.CRS("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
       {
         origin: [-180.0, 90.0],
@@ -47,7 +47,7 @@ const gis = {
       crs: crs,
       center: center,
       zoom: zoom,
-      minZoom: 7,
+      minZoom: 8,
       maxZoom: 18,
       forceDrawEverything: true
     });
@@ -55,7 +55,7 @@ const gis = {
     L.tileLayer(url).addTo(this.map);
 
   },
-  h_wh_gis_init(type, el){
+  h_gis_init(type, el){
     const crs = new L.Proj.CRS("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
       {
         origin: [-180.0, 90.0],
@@ -92,8 +92,8 @@ const gis = {
 
     var cfg = {
       // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-      "radius": .003,
-      "maxOpacity": .8,
+      "radius": .0025,
+      "maxOpacity": .7,
       // scales the radius based on map zoom
       "scaleRadius": true,
       // if set to false the heatmap uses the global maximum for colorization
@@ -122,7 +122,7 @@ const gis = {
       crs: crs,
       center: center,
       zoom: zoom,
-      minZoom: 7,
+      minZoom: 8,
       maxZoom: 18,
       layers: [baseLayer, this.heatmapLayer],
       forceDrawEverything: true
@@ -132,6 +132,13 @@ const gis = {
   setCenter(type){
     const center = type==='by'?[28.679627, 115.901053]:[28.688389, 115.859096]
     this.map.setView(center)
+    const zoom = this.map.getZoom()
+    if(zoom!==14){
+      setTimeout(() => {
+        this.map.setZoom(14)
+      },300)
+    }
+    
   },
   drawArea(data){
     let features = []
@@ -279,7 +286,6 @@ const gis = {
   },
   hRemoveMapvLayer() {
     this.heatmapLayer.setData({
-      max:0,
       data:[]
     });
   }
