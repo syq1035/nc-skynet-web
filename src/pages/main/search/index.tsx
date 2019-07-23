@@ -72,6 +72,11 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
         key: 'bts_name',
       },
       {
+        title: '设备地址',
+        dataIndex: 'addr',
+        key: 'addr',
+      },
+      {
         title: '前台序列号',
         dataIndex: 'sn',
         key: 'sn',
@@ -197,7 +202,7 @@ export default class Home extends React.Component<RouteComponentProps, {}> {
               <Input
                size="small"
                className="device-input" 
-               placeholder="输入ID域名称" 
+               placeholder="输入ID或名称" 
                value={this.bts}
                onChange={e => { this.bts = e.target.value }}
                />
